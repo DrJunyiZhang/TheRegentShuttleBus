@@ -34,11 +34,15 @@
       font-size: 1.7em;
       font-weight: bold;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
       height: 54px;
-      padding: 0 24px 0 0;
+      padding: 0 24px;
       letter-spacing: 0.03em;
+    }
+    #current-date {
+      font-size: 0.78em;
+      letter-spacing: 0.04em;
     }
     .arrivals-table {
       width: 100%;
@@ -89,10 +93,10 @@
       .header-bar {
         font-size: 1.08em;
         height: 38px;
-        padding-right: 8px;
+        padding: 0 12px;
       }
       .arrivals-table td {
-        padding: 0 8px;
+        padding: 0 12px;
       }
       .arrivals-table tr {
         font-size: 1em;
@@ -105,20 +109,25 @@
       .bus-name {
         font-size: 1em;
       }
+      #current-date {
+        font-size: 0.68em;
+      }
     }
   </style>
 </head>
 <body>
   <div class="mtr-screen">
     <div class="header-bar">
+      <span id="current-date"></span>
       <span id="current-time"></span>
     </div>
     <table class="arrivals-table" id="arrivals-table">
       <!-- JS fills in rows -->
     </table>
   </div>
+
   <script>
-    // Arrival times for Bus A and Bus B
+    // ── Timetables ───────────────────────────────────────────────
     const busATimes = [
       { hour: 6, minute: 30 },
       { hour: 6, minute: 40 },
@@ -218,8 +227,8 @@
       { hour: 22, minute: 40 },
       { hour: 22, minute: 50 },
       { hour: 23, minute: 0 }
-
     ];
+
     const busBTimes = [
       { hour: 6, minute: 35 },
       { hour: 6, minute: 45 },
@@ -320,20 +329,17 @@
       { hour: 22, minute: 50 },
       { hour: 23, minute: 0 },
       { hour: 23, minute: 15 }
-
-
     ];
 
-    // Helper: get Date objects for a bus timetable for given day offset
+    // ── Helper Functions ─────────────────────────────────────────
     function getBusDateTimesForDay(busTimes, dayOffset = 0) {
       const now = new Date();
       const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() + dayOffset);
-      return busTimes.map(t =>
+      return busTimes.map(t => 
         new Date(date.getFullYear(), date.getMonth(), date.getDate(), t.hour, t.minute, 0, 0)
       );
     }
 
-    // Helper: get next n buses from a given timetable
     function getNextNBuses(busTimes, n) {
       const now = new Date();
       let buses = [];
@@ -349,7 +355,6 @@
       return buses;
     }
 
-    // Helper: format waiting time in minutes and seconds
     function formatWait(diffMs) {
       const diffSec = Math.floor(diffMs / 1000);
       const minutes = Math.floor(diffSec / 60);
@@ -357,23 +362,35 @@
       return `${minutes}.${seconds.toString().padStart(2,'0')}`;
     }
 
-    // Helper: format current time as HH:mm (24h)
     function formatCurrentTime(dateObj) {
       return dateObj.getHours().toString().padStart(2, '0') + ':' +
              dateObj.getMinutes().toString().padStart(2, '0') + ':' + 
              dateObj.getSeconds().toString().padStart(2, '0');
     }
 
-    // Combine both bus lines, sorted by soonest arrival
+    function formatCurrentDate(dateObj) {
+      const year = dateObj.getFullYear();
+      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+      const day = dateObj.getDate().toString().padStart(2, '0');
+      const weekday = dateObj.toLocaleString('en-US', { weekday: 'long' });
+      return `${year}-${month}-${day} ${weekday}`;
+    }
+
     function getNextCombinedArrivals(n) {
       const now = new Date();
-      // Get all upcoming arrivals for A and B (today + tomorrow)
       const arrivalsA = getNextNBuses(busATimes, n*2).map(dt => ({ bus: 'Bus A', time: dt }));
       const arrivalsB = getNextNBuses(busBTimes, n*2).map(dt => ({ bus: 'Bus B', time: dt }));
       const allArrivals = arrivalsA.concat(arrivalsB)
         .filter(obj => obj.time > now)
         .sort((a, b) => a.time - b.time);
       return allArrivals.slice(0, n);
+    }
+
+    // ── Update Functions ─────────────────────────────────────────
+    function updateHeader() {
+      const now = new Date();
+      document.getElementById('current-date').textContent = formatCurrentDate(now);
+      document.getElementById('current-time').textContent = formatCurrentTime(now);
     }
 
     function updateArrivalsTable() {
@@ -384,9 +401,20 @@
       let html = '';
       nextArrivals.forEach(arrival => {
         const diffMs = arrival.time - now;
+        
+        // Format scheduled time
+        const hours = arrival.time.getHours().toString().padStart(2, '0');
+        const minutes = arrival.time.getMinutes().toString().padStart(2, '0');
+        const scheduledTime = `${hours}:${minutes}`;
+
         html += `
           <tr>
-            <td class="bus-name">${arrival.bus}</td>
+            <td class="bus-name">
+              ${arrival.bus}
+              <span style="color:#666; font-size:0.82em; margin-left:10px; letter-spacing:0.02em;">
+                ${scheduledTime}
+              </span>
+            </td>
             <td class="wait-mins">${formatWait(diffMs)}</td>
           </tr>
         `;
@@ -394,18 +422,14 @@
       table.innerHTML = html;
     }
 
-    function updateCurrentTime() {
-      const now = new Date();
-      document.getElementById('current-time').textContent = formatCurrentTime(now);
-    }
-
     function updateAll() {
-      updateCurrentTime();
+      updateHeader();
       updateArrivalsTable();
     }
 
+    // Start updating every second
     setInterval(updateAll, 1000);
-    updateAll();
+    updateAll(); // Initial call
   </script>
 </body>
 </html>
