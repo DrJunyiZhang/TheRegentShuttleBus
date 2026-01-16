@@ -79,12 +79,6 @@
       letter-spacing: 0.04em;
       min-width: 80px;
     }
-    .wait-mins .unit {
-      font-size: 0.9em;
-      color: #888;
-      margin-left: 6px;
-      font-weight: normal;
-    }
     @media (max-width: 500px) {
       .mtr-screen {
         min-width: 0;
@@ -127,8 +121,8 @@
   </div>
 
   <script>
-    // ── Timetables ───────────────────────────────────────────────
-    const busATimes = [
+    // ── Weekday Timetables (Mon–Fri) ─────────────────────────────
+    const busATimesWeekday = [
       { hour: 6, minute: 30 },
       { hour: 6, minute: 40 },
       { hour: 6, minute: 50 },
@@ -229,7 +223,7 @@
       { hour: 23, minute: 0 }
     ];
 
-    const busBTimes = [
+    const busBTimesWeekday = [
       { hour: 6, minute: 35 },
       { hour: 6, minute: 45 },
       { hour: 6, minute: 55 },
@@ -331,7 +325,251 @@
       { hour: 23, minute: 15 }
     ];
 
-    // ── Helper Functions ─────────────────────────────────────────
+    const busCTimesWeekday = [
+      { hour: 9, minute: 15 },
+      { hour: 10, minute: 15 },
+      { hour: 11, minute: 15 },
+      { hour: 12, minute: 15 },
+      { hour: 13, minute: 15 },
+      { hour: 14, minute: 15 },
+      { hour: 15, minute: 15 },
+      { hour: 16, minute: 15 },
+      { hour: 17, minute: 15 },
+      { hour: 20, minute: 15 },
+      { hour: 21, minute: 15 },
+      { hour: 22, minute: 15 }
+    ];
+
+    // ── Weekend Timetables (Sat & Sun) ───────────────────────────
+    const busATimesWeekend = [
+      { hour: 6, minute: 30 },
+      { hour: 6, minute: 40 },
+      { hour: 6, minute: 50 },
+      { hour: 7, minute: 0 },
+      { hour: 7, minute: 10 },
+      { hour: 7, minute: 20 },
+      { hour: 7, minute: 30 },
+      { hour: 7, minute: 40 },
+      { hour: 7, minute: 50 },
+      { hour: 8, minute: 0 },
+      { hour: 8, minute: 10 },
+      { hour: 8, minute: 20 },
+      { hour: 8, minute: 30 },
+      { hour: 8, minute: 40 },
+      { hour: 8, minute: 50 },
+      { hour: 9, minute: 0 },
+      { hour: 9, minute: 10 },
+      { hour: 9, minute: 20 },
+      { hour: 9, minute: 30 },
+      { hour: 9, minute: 40 },
+      { hour: 9, minute: 55 },
+      { hour: 10, minute: 10 },
+      { hour: 10, minute: 25 },
+      { hour: 10, minute: 40 },
+      { hour: 10, minute: 55 },
+      { hour: 11, minute: 10 },
+      { hour: 11, minute: 25 },
+      { hour: 11, minute: 40 },
+      { hour: 11, minute: 55 },
+      { hour: 12, minute: 5 },
+      { hour: 12, minute: 10 },
+      { hour: 12, minute: 15 },
+      { hour: 12, minute: 25 },
+      { hour: 12, minute: 30 },
+      { hour: 12, minute: 35 },
+      { hour: 12, minute: 45 },
+      { hour: 12, minute: 50 },
+      { hour: 12, minute: 55 },
+      { hour: 13, minute: 5 },
+      { hour: 13, minute: 10 },
+      { hour: 13, minute: 15 },
+      { hour: 13, minute: 25 },
+      { hour: 13, minute: 30 },
+      { hour: 13, minute: 35 },
+      { hour: 13, minute: 45 },
+      { hour: 13, minute: 50 },
+      { hour: 13, minute: 55 },
+      { hour: 14, minute: 5 },
+      { hour: 14, minute: 10 },
+      { hour: 14, minute: 15 },
+      { hour: 14, minute: 25 },
+      { hour: 14, minute: 30 },
+      { hour: 14, minute: 40 },
+      { hour: 14, minute: 55 },
+      { hour: 15, minute: 10 },
+      { hour: 15, minute: 25 },
+      { hour: 15, minute: 40 },
+      { hour: 15, minute: 55 },
+      { hour: 16, minute: 5 },
+      { hour: 16, minute: 15 },
+      { hour: 16, minute: 25 },
+      { hour: 16, minute: 35 },
+      { hour: 16, minute: 45 },
+      { hour: 16, minute: 55 },
+      { hour: 17, minute: 0 },
+      { hour: 17, minute: 5 },
+      { hour: 17, minute: 15 },
+      { hour: 17, minute: 20 },
+      { hour: 17, minute: 25 },
+      { hour: 17, minute: 35 },
+      { hour: 17, minute: 40 },
+      { hour: 17, minute: 45 },
+      { hour: 17, minute: 55 },
+      { hour: 18, minute: 0 },
+      { hour: 18, minute: 5 },
+      { hour: 18, minute: 15 },
+      { hour: 18, minute: 20 },
+      { hour: 18, minute: 25 },
+      { hour: 18, minute: 35 },
+      { hour: 18, minute: 40 },
+      { hour: 18, minute: 45 },
+      { hour: 18, minute: 55 },
+      { hour: 19, minute: 0 },
+      { hour: 19, minute: 15 },
+      { hour: 19, minute: 30 },
+      { hour: 19, minute: 45 },
+      { hour: 20, minute: 0 },
+      { hour: 20, minute: 15 },
+      { hour: 20, minute: 30 },
+      { hour: 20, minute: 45 },
+      { hour: 21, minute: 0 },
+      { hour: 21, minute: 15 },
+      { hour: 21, minute: 30 },
+      { hour: 21, minute: 45 },
+      { hour: 22, minute: 0 },
+      { hour: 22, minute: 10 },
+      { hour: 22, minute: 20 },
+      { hour: 22, minute: 30 },
+      { hour: 22, minute: 40 },
+      { hour: 22, minute: 50 },
+      { hour: 23, minute: 0 }
+    ];
+
+    const busBTimesWeekend = [
+      { hour: 6, minute: 35 },
+      { hour: 6, minute: 45 },
+      { hour: 6, minute: 55 },
+      { hour: 7, minute: 5 },
+      { hour: 7, minute: 15 },
+      { hour: 7, minute: 25 },
+      { hour: 7, minute: 35 },
+      { hour: 7, minute: 45 },
+      { hour: 7, minute: 55 },
+      { hour: 8, minute: 5 },
+      { hour: 8, minute: 15 },
+      { hour: 8, minute: 25 },
+      { hour: 8, minute: 35 },
+      { hour: 8, minute: 45 },
+      { hour: 8, minute: 55 },
+      { hour: 9, minute: 5 },
+      { hour: 9, minute: 15 },
+      { hour: 9, minute: 25 },
+      { hour: 9, minute: 35 },
+      { hour: 9, minute: 45 },
+      { hour: 10, minute: 0 },
+      { hour: 10, minute: 15 },
+      { hour: 10, minute: 30 },
+      { hour: 10, minute: 45 },
+      { hour: 11, minute: 0 },
+      { hour: 11, minute: 15 },
+      { hour: 11, minute: 30 },
+      { hour: 11, minute: 45 },
+      { hour: 12, minute: 0 },
+      { hour: 12, minute: 10 },
+      { hour: 12, minute: 15 },
+      { hour: 12, minute: 25 },
+      { hour: 12, minute: 35 },
+      { hour: 12, minute: 45 },
+      { hour: 12, minute: 55 },
+      { hour: 13, minute: 0 },
+      { hour: 13, minute: 10 },
+      { hour: 13, minute: 20 },
+      { hour: 13, minute: 25 },
+      { hour: 13, minute: 35 },
+      { hour: 13, minute: 45 },
+      { hour: 13, minute: 50 },
+      { hour: 14, minute: 0 },
+      { hour: 14, minute: 10 },
+      { hour: 14, minute: 15 },
+      { hour: 14, minute: 25 },
+      { hour: 14, minute: 40 },
+      { hour: 14, minute: 55 },
+      { hour: 15, minute: 10 },
+      { hour: 15, minute: 25 },
+      { hour: 15, minute: 40 },
+      { hour: 15, minute: 50 },
+      { hour: 16, minute: 0 },
+      { hour: 16, minute: 10 },
+      { hour: 16, minute: 20 },
+      { hour: 16, minute: 30 },
+      { hour: 16, minute: 40 },
+      { hour: 16, minute: 50 },
+      { hour: 17, minute: 0 },
+      { hour: 17, minute: 10 },
+      { hour: 17, minute: 20 },
+      { hour: 17, minute: 25 },
+      { hour: 17, minute: 35 },
+      { hour: 17, minute: 45 },
+      { hour: 17, minute: 50 },
+      { hour: 18, minute: 0 },
+      { hour: 18, minute: 10 },
+      { hour: 18, minute: 15 },
+      { hour: 18, minute: 25 },
+      { hour: 18, minute: 35 },
+      { hour: 18, minute: 40 },
+      { hour: 18, minute: 50 },
+      { hour: 19, minute: 5 },
+      { hour: 19, minute: 15 },
+      { hour: 19, minute: 30 },
+      { hour: 19, minute: 40 },
+      { hour: 19, minute: 55 },
+      { hour: 20, minute: 5 },
+      { hour: 20, minute: 20 },
+      { hour: 20, minute: 30 },
+      { hour: 20, minute: 45 },
+      { hour: 20, minute: 55 },
+      { hour: 21, minute: 10 },
+      { hour: 21, minute: 20 },
+      { hour: 21, minute: 35 },
+      { hour: 21, minute: 45 },
+      { hour: 21, minute: 55 },
+      { hour: 22, minute: 5 },
+      { hour: 22, minute: 15 },
+      { hour: 22, minute: 25 },
+      { hour: 22, minute: 35 },
+      { hour: 22, minute: 45 },
+      { hour: 23, minute: 0 },
+      { hour: 23, minute: 15 }
+    ];
+
+    const busCTimesWeekend = [
+      { hour: 06, minute: 30 },
+      { hour: 07, minute: 30 },
+      { hour: 08, minute: 30 },
+      { hour: 09, minute: 30 },
+      { hour: 10, minute: 30 },
+      { hour: 11, minute: 30 },
+      { hour: 14, minute: 30 },
+      { hour: 15, minute: 30 },
+      { hour: 16, minute: 30 },
+      { hour: 19, minute: 30 },
+      { hour: 20, minute: 30 },
+      { hour: 21, minute: 30 },
+      { hour: 22, minute: 30 }
+    ];
+
+    // ── Helper: Choose correct timetable based on day ────────────
+    function getTimetable(bus) {
+      const now = new Date();
+      const isWeekend = now.getDay() === 0 || now.getDay() === 6; // 0=Sun, 6=Sat
+
+      if (bus === 'A') return isWeekend ? busATimesWeekend : busATimesWeekday;
+      if (bus === 'B') return isWeekend ? busBTimesWeekend : busBTimesWeekday;
+      if (bus === 'C') return isWeekend ? busCTimesWeekend : busCTimesWeekday;
+      return [];
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────
     function getBusDateTimesForDay(busTimes, dayOffset = 0) {
       const now = new Date();
       const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() + dayOffset);
@@ -340,16 +578,19 @@
       );
     }
 
-    function getNextNBuses(busTimes, n) {
+    function getNextNBuses(bus, n) {
       const now = new Date();
+      const times = getTimetable(bus);
+
       let buses = [];
-      let todayBuses = getBusDateTimesForDay(busTimes, 0).filter(busTime => busTime > now);
+      let todayBuses = getBusDateTimesForDay(times, 0).filter(t => t > now);
+      
       if (todayBuses.length >= n) {
         buses = todayBuses.slice(0, n);
       } else {
         buses = todayBuses;
-        let tomorrowBuses = getBusDateTimesForDay(busTimes, 1);
-        let needed = n - buses.length;
+        const tomorrowBuses = getBusDateTimesForDay(times, 1);
+        const needed = n - buses.length;
         buses = buses.concat(tomorrowBuses.slice(0, needed));
       }
       return buses;
@@ -378,11 +619,14 @@
 
     function getNextCombinedArrivals(n) {
       const now = new Date();
-      const arrivalsA = getNextNBuses(busATimes, n*2).map(dt => ({ bus: 'Bus A', time: dt }));
-      const arrivalsB = getNextNBuses(busBTimes, n*2).map(dt => ({ bus: 'Bus B', time: dt }));
-      const allArrivals = arrivalsA.concat(arrivalsB)
+      const arrivalsA = getNextNBuses('A', n*2).map(dt => ({ bus: 'Bus A', time: dt }));
+      const arrivalsB = getNextNBuses('B', n*2).map(dt => ({ bus: 'Bus B', time: dt }));
+      const arrivalsC = getNextNBuses('C', n*2).map(dt => ({ bus: 'Bus C', time: dt }));
+      
+      const allArrivals = arrivalsA.concat(arrivalsB, arrivalsC)
         .filter(obj => obj.time > now)
         .sort((a, b) => a.time - b.time);
+      
       return allArrivals.slice(0, n);
     }
 
@@ -402,7 +646,6 @@
       nextArrivals.forEach(arrival => {
         const diffMs = arrival.time - now;
         
-        // Format scheduled time
         const hours = arrival.time.getHours().toString().padStart(2, '0');
         const minutes = arrival.time.getMinutes().toString().padStart(2, '0');
         const scheduledTime = `${hours}:${minutes}`;
