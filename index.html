@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -576,6 +577,40 @@
 
       kmbCache = etas;
     }
+    
+    const EDUHK_STOP = "DA9843B8F12ED700";  // Confirmed for TP893 - The Education University of HK
+    let eduhkCache = [];
+
+    async function fetchEdUHKETAs() {
+      let etas = [];
+      const now = new Date();
+
+      for (const st of KMB_SERVICE_TYPES) {  // ["1", "2"]
+        try {
+          const url = `https://data.etabus.gov.hk/v1/transport/kmb/eta/${EDUHK_STOP}/${KMB_ROUTE}/${st}`;
+          const res = await fetch(url);
+          if (!res.ok) continue;
+          const json = await res.json();
+          if (json.data && json.data.length > 0) {
+            const arrivals = json.data
+              .filter(e => e.eta && new Date(e.eta) > now)  // All future arrivals at this stop
+              // Optional: .filter(e => e.seq === 1) if you want only scheduled/timetable ones
+              .sort((a, b) => new Date(a.eta) - new Date(b.eta));
+            etas = etas.concat(arrivals);
+          }
+        } catch (err) {
+          console.warn("EdUHK (TP893) ETA fetch error", err);
+        }
+      }
+
+      // Dedupe by eta, sort, limit to next 3
+      etas = etas
+        .filter((e, i, self) => self.findIndex(t => t.eta === e.eta) === i)
+        .sort((a, b) => new Date(a.eta) - new Date(b.eta))
+        .slice(0, 3);
+
+      eduhkCache = etas;
+    }
 
     function formatKMBDiff(etaStr) {
       if (!etaStr) return "--.--";
@@ -683,8 +718,8 @@
       });
 
       // 74K real-time ── now up to 3 buses
-      if (kmbCache.length > 0) {
-        kmbCache.forEach(eta => {
+      if (eduhkCache.length > 0) {
+        eduhkCache.forEach(eta => {
           const etaDate = new Date(eta.eta);
           const hours = etaDate.getHours().toString().padStart(2, '0');
           const minutes = etaDate.getMinutes().toString().padStart(2, '0');
@@ -693,9 +728,9 @@
           html += `
             <tr>
               <td class="bus-name">
-                74K (Public)
+                74K at EdUHK (TP893)
                 <span style="color:#666; font-size:0.82em; margin-left:10px; letter-spacing:0.02em;">${scheduled}</span>
-                <span class="remark">from Tai Po Market Stn ${remark}</span>
+                <span class="remark">arrival at campus ${remark}</span>
               </td>
               <td class="wait-mins">${formatKMBDiff(eta.eta)}</td>
             </tr>
@@ -705,8 +740,38 @@
         html += `
           <tr>
             <td class="bus-name">
-              74K (Public)
-              <span class="remark">from Tai Po Market Stn • loading...</span>
+              74K at EdUHK (TP893)
+              <span class="remark">arrival at campus • loading...</span>
+            </td>
+            <td class="wait-mins">--.--</td>
+          </tr>
+        `;
+      }
+      
+      if (eduhkCache.length > 0) {
+        eduhkCache.forEach(eta => {
+          const etaDate = new Date(eta.eta);
+          const hours = etaDate.getHours().toString().padStart(2, '0');
+          const minutes = etaDate.getMinutes().toString().padStart(2, '0');
+          const scheduled = `${hours}:${minutes}`;
+          const remark = eta.rmk_en ? `(${eta.rmk_en})` : '';
+          html += `
+            <tr>
+              <td class="bus-name">
+                74K at EdUHK
+                <span style="color:#666; font-size:0.82em; margin-left:10px; letter-spacing:0.02em;">${scheduled}</span>
+                <span class="remark">arrival at campus ${remark}</span>
+              </td>
+              <td class="wait-mins">${formatKMBDiff(eta.eta)}</td>
+            </tr>
+          `;
+        });
+      } else {
+        html += `
+          <tr>
+            <td class="bus-name">
+              74K at EdUHK
+              <span class="remark">arrival at campus • loading...</span>
             </td>
             <td class="wait-mins">--.--</td>
           </tr>
@@ -722,8 +787,10 @@
     }
 
     // ── Start ──────────────────────────────────────────────────────────────────
-    fetchKMBETAs(); // initial fetch
-    setInterval(fetchKMBETAs, 30000); // refresh ETA every 30s
+    fetchKMBETAs();       // Tai Po Market
+    fetchEdUHKETAs();     // EdUHK TP893
+    setInterval(fetchKMBETAs, 30000);
+    setInterval(fetchEdUHKETAs, 30000);
     setInterval(updateAll, 1000);     // update clock & display every 1s
     updateAll();                      // initial call
   </script>
