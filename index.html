@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Regent Shuttle Bus Arrival Info</title>
+  <title>The Regent Shuttle Bus Arrival Info + 74K</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@700&display=swap');
@@ -80,6 +79,15 @@
       margin-top: 2px;
       letter-spacing: 0.02em;
     }
+    .section-header {
+      background: #597ab9;
+      color: #fff;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-align: center;
+      height: 34px;
+      line-height: 34px;
+    }
     @media (max-width: 500px) {
       .mtr-screen { min-width: 0; max-width: 98vw; }
       .header-bar { font-size: 1.08em; height: 38px; padding: 0 12px; }
@@ -103,513 +111,210 @@
   </div>
 
   <script>
-    // ── Your original timetables (A/B/C) unchanged ─────────────────────────────
+    // ── Weekday Timetables (Mon–Fri) ────────────────────────────────────────
     const busATimesWeekday = [
-      { hour: 6, minute: 30 },
-      { hour: 6, minute: 40 },
-      { hour: 6, minute: 50 },
-      { hour: 7, minute: 0 },
-      { hour: 7, minute: 5 },
-      { hour: 7, minute: 10 },
-      { hour: 7, minute: 20 },
-      { hour: 7, minute: 25 },
-      { hour: 7, minute: 30 },
-      { hour: 7, minute: 40 },
-      { hour: 7, minute: 45 },
-      { hour: 7, minute: 50 },
-      { hour: 8, minute: 0 },
-      { hour: 8, minute: 5 },
-      { hour: 8, minute: 10 },
-      { hour: 8, minute: 20 },
-      { hour: 8, minute: 25 },
-      { hour: 8, minute: 30 },
-      { hour: 8, minute: 40 },
-      { hour: 8, minute: 45 },
-      { hour: 8, minute: 50 },
-      { hour: 9, minute: 0 },
-      { hour: 9, minute: 10 },
-      { hour: 9, minute: 20 },
-      { hour: 9, minute: 30 },
-      { hour: 9, minute: 40 },
-      { hour: 9, minute: 50 },
-      { hour: 10, minute: 0 },
-      { hour: 10, minute: 10 },
-      { hour: 10, minute: 15 },
-      { hour: 10, minute: 30 },
-      { hour: 10, minute: 45 },
-      { hour: 11, minute: 0 },
-      { hour: 11, minute: 15 },
-      { hour: 11, minute: 30 },
-      { hour: 11, minute: 45 },
-      { hour: 12, minute: 0 },
-      { hour: 12, minute: 15 },
-      { hour: 12, minute: 30 },
-      { hour: 12, minute: 45 },
-      { hour: 13, minute: 0 },
-      { hour: 13, minute: 10 },
-      { hour: 13, minute: 20 },
-      { hour: 13, minute: 30 },
-      { hour: 13, minute: 40 },
-      { hour: 13, minute: 50 },
-      { hour: 14, minute: 0 },
-      { hour: 14, minute: 10 },
-      { hour: 14, minute: 20 },
-      { hour: 14, minute: 30 },
-      { hour: 14, minute: 40 },
-      { hour: 14, minute: 50 },
-      { hour: 15, minute: 0 },
-      { hour: 15, minute: 10 },
-      { hour: 15, minute: 20 },
-      { hour: 15, minute: 30 },
-      { hour: 15, minute: 40 },
-      { hour: 15, minute: 50 },
-      { hour: 16, minute: 0 },
-      { hour: 16, minute: 10 },
-      { hour: 16, minute: 20 },
-      { hour: 16, minute: 30 },
-      { hour: 16, minute: 40 },
-      { hour: 16, minute: 50 },
-      { hour: 17, minute: 0 },
-      { hour: 17, minute: 15 },
-      { hour: 17, minute: 30 },
-      { hour: 17, minute: 45 },
-      { hour: 18, minute: 0 },
-      { hour: 18, minute: 5 },
-      { hour: 18, minute: 10 },
-      { hour: 18, minute: 20 },
-      { hour: 18, minute: 30 },
-      { hour: 18, minute: 40 },
-      { hour: 18, minute: 50 },
-      { hour: 18, minute: 55 },
-      { hour: 19, minute: 0 },
-      { hour: 19, minute: 10 },
-      { hour: 19, minute: 20 },
-      { hour: 19, minute: 30 },
-      { hour: 19, minute: 40 },
-      { hour: 19, minute: 45 },
-      { hour: 19, minute: 50 },
-      { hour: 20, minute: 0 },
-      { hour: 20, minute: 5 },
-      { hour: 20, minute: 20 },
-      { hour: 20, minute: 35 },
-      { hour: 20, minute: 50 },
-      { hour: 21, minute: 5 },
-      { hour: 21, minute: 20 },
-      { hour: 21, minute: 35 },
-      { hour: 21, minute: 50 },
-      { hour: 22, minute: 5 },
-      { hour: 22, minute: 20 },
-      { hour: 22, minute: 30 },
-      { hour: 22, minute: 40 },
-      { hour: 22, minute: 50 },
-      { hour: 23, minute: 0 }
+      { hour: 6, minute: 30 }, { hour: 6, minute: 40 }, { hour: 6, minute: 50 },
+      { hour: 7, minute: 0 }, { hour: 7, minute: 5 }, { hour: 7, minute: 10 },
+      { hour: 7, minute: 20 }, { hour: 7, minute: 25 }, { hour: 7, minute: 30 },
+      { hour: 7, minute: 40 }, { hour: 7, minute: 45 }, { hour: 7, minute: 50 },
+      { hour: 8, minute: 0 }, { hour: 8, minute: 5 }, { hour: 8, minute: 10 },
+      { hour: 8, minute: 20 }, { hour: 8, minute: 25 }, { hour: 8, minute: 30 },
+      { hour: 8, minute: 40 }, { hour: 8, minute: 45 }, { hour: 8, minute: 50 },
+      { hour: 9, minute: 0 }, { hour: 9, minute: 10 }, { hour: 9, minute: 20 },
+      { hour: 9, minute: 30 }, { hour: 9, minute: 40 }, { hour: 9, minute: 50 },
+      { hour: 10, minute: 0 }, { hour: 10, minute: 10 }, { hour: 10, minute: 15 },
+      { hour: 10, minute: 30 }, { hour: 10, minute: 45 }, { hour: 11, minute: 0 },
+      { hour: 11, minute: 15 }, { hour: 11, minute: 30 }, { hour: 11, minute: 45 },
+      { hour: 12, minute: 0 }, { hour: 12, minute: 15 }, { hour: 12, minute: 30 },
+      { hour: 12, minute: 45 }, { hour: 13, minute: 0 }, { hour: 13, minute: 10 },
+      { hour: 13, minute: 20 }, { hour: 13, minute: 30 }, { hour: 13, minute: 40 },
+      { hour: 13, minute: 50 }, { hour: 14, minute: 0 }, { hour: 14, minute: 10 },
+      { hour: 14, minute: 20 }, { hour: 14, minute: 30 }, { hour: 14, minute: 40 },
+      { hour: 14, minute: 50 }, { hour: 15, minute: 0 }, { hour: 15, minute: 10 },
+      { hour: 15, minute: 20 }, { hour: 15, minute: 30 }, { hour: 15, minute: 40 },
+      { hour: 15, minute: 50 }, { hour: 16, minute: 0 }, { hour: 16, minute: 10 },
+      { hour: 16, minute: 20 }, { hour: 16, minute: 30 }, { hour: 16, minute: 40 },
+      { hour: 16, minute: 50 }, { hour: 17, minute: 0 }, { hour: 17, minute: 15 },
+      { hour: 17, minute: 30 }, { hour: 17, minute: 45 }, { hour: 18, minute: 0 },
+      { hour: 18, minute: 5 }, { hour: 18, minute: 10 }, { hour: 18, minute: 20 },
+      { hour: 18, minute: 30 }, { hour: 18, minute: 40 }, { hour: 18, minute: 50 },
+      { hour: 18, minute: 55 }, { hour: 19, minute: 0 }, { hour: 19, minute: 10 },
+      { hour: 19, minute: 20 }, { hour: 19, minute: 30 }, { hour: 19, minute: 40 },
+      { hour: 19, minute: 45 }, { hour: 19, minute: 50 }, { hour: 20, minute: 0 },
+      { hour: 20, minute: 5 }, { hour: 20, minute: 20 }, { hour: 20, minute: 35 },
+      { hour: 20, minute: 50 }, { hour: 21, minute: 5 }, { hour: 21, minute: 20 },
+      { hour: 21, minute: 35 }, { hour: 21, minute: 50 }, { hour: 22, minute: 5 },
+      { hour: 22, minute: 20 }, { hour: 22, minute: 30 }, { hour: 22, minute: 40 },
+      { hour: 22, minute: 50 }, { hour: 23, minute: 0 }
     ];
 
     const busBTimesWeekday = [
-      { hour: 6, minute: 35 },
-      { hour: 6, minute: 45 },
-      { hour: 6, minute: 55 },
-      { hour: 7, minute: 5 },
-      { hour: 7, minute: 10 },
-      { hour: 7, minute: 15 },
-      { hour: 7, minute: 20 },
-      { hour: 7, minute: 30 },
-      { hour: 7, minute: 35 },
-      { hour: 7, minute: 40 },
-      { hour: 7, minute: 45 },
-      { hour: 7, minute: 50 },
-      { hour: 7, minute: 55 },
-      { hour: 8, minute: 0 },
-      { hour: 8, minute: 5 },
-      { hour: 8, minute: 10 },
-      { hour: 8, minute: 20 },
-      { hour: 8, minute: 25 },
-      { hour: 8, minute: 30 },
-      { hour: 8, minute: 35 },
-      { hour: 8, minute: 45 },
-      { hour: 8, minute: 50 },
-      { hour: 8, minute: 55 },
-      { hour: 9, minute: 5 },
-      { hour: 9, minute: 15 },
-      { hour: 9, minute: 25 },
-      { hour: 9, minute: 35 },
-      { hour: 9, minute: 45 },
-      { hour: 9, minute: 55 },
-      { hour: 10, minute: 5 },
-      { hour: 10, minute: 20 },
-      { hour: 10, minute: 35 },
-      { hour: 10, minute: 50 },
-      { hour: 11, minute: 5 },
-      { hour: 11, minute: 20 },
-      { hour: 11, minute: 35 },
-      { hour: 11, minute: 50 },
-      { hour: 12, minute: 5 },
-      { hour: 12, minute: 20 },
-      { hour: 12, minute: 35 },
-      { hour: 12, minute: 50 },
-      { hour: 13, minute: 5 },
-      { hour: 13, minute: 20 },
-      { hour: 13, minute: 30 },
-      { hour: 13, minute: 40 },
-      { hour: 13, minute: 50 },
-      { hour: 14, minute: 0 },
-      { hour: 14, minute: 10 },
-      { hour: 14, minute: 20 },
-      { hour: 14, minute: 30 },
-      { hour: 14, minute: 40 },
-      { hour: 14, minute: 50 },
-      { hour: 15, minute: 0 },
-      { hour: 15, minute: 10 },
-      { hour: 15, minute: 20 },
-      { hour: 15, minute: 30 },
-      { hour: 15, minute: 40 },
-      { hour: 15, minute: 50 },
-      { hour: 16, minute: 0 },
-      { hour: 16, minute: 10 },
-      { hour: 16, minute: 20 },
-      { hour: 16, minute: 30 },
-      { hour: 16, minute: 40 },
-      { hour: 16, minute: 55 },
-      { hour: 17, minute: 10 },
-      { hour: 17, minute: 20 },
-      { hour: 17, minute: 35 },
-      { hour: 17, minute: 45 },
-      { hour: 18, minute: 0 },
-      { hour: 18, minute: 10 },
-      { hour: 18, minute: 20 },
-      { hour: 18, minute: 25 },
-      { hour: 18, minute: 35 },
-      { hour: 18, minute: 45 },
-      { hour: 18, minute: 50 },
-      { hour: 19, minute: 0 },
-      { hour: 19, minute: 10 },
-      { hour: 19, minute: 15 },
-      { hour: 19, minute: 25 },
-      { hour: 19, minute: 35 },
-      { hour: 19, minute: 40 },
-      { hour: 19, minute: 50 },
-      { hour: 20, minute: 5 },
-      { hour: 20, minute: 15 },
-      { hour: 20, minute: 30 },
-      { hour: 20, minute: 40 },
-      { hour: 20, minute: 55 },
-      { hour: 21, minute: 5 },
-      { hour: 21, minute: 20 },
-      { hour: 21, minute: 30 },
-      { hour: 21, minute: 45 },
-      { hour: 21, minute: 55 },
-      { hour: 22, minute: 10 },
-      { hour: 22, minute: 20 },
-      { hour: 22, minute: 30 },
-      { hour: 22, minute: 40 },
-      { hour: 22, minute: 50 },
-      { hour: 23, minute: 0 },
-      { hour: 23, minute: 15 }
+      { hour: 6, minute: 35 }, { hour: 6, minute: 45 }, { hour: 6, minute: 55 },
+      { hour: 7, minute: 5 }, { hour: 7, minute: 10 }, { hour: 7, minute: 15 },
+      { hour: 7, minute: 20 }, { hour: 7, minute: 30 }, { hour: 7, minute: 35 },
+      { hour: 7, minute: 40 }, { hour: 7, minute: 45 }, { hour: 7, minute: 50 },
+      { hour: 7, minute: 55 }, { hour: 8, minute: 0 }, { hour: 8, minute: 5 },
+      { hour: 8, minute: 10 }, { hour: 8, minute: 20 }, { hour: 8, minute: 25 },
+      { hour: 8, minute: 30 }, { hour: 8, minute: 35 }, { hour: 8, minute: 45 },
+      { hour: 8, minute: 50 }, { hour: 8, minute: 55 }, { hour: 9, minute: 5 },
+      { hour: 9, minute: 15 }, { hour: 9, minute: 25 }, { hour: 9, minute: 35 },
+      { hour: 9, minute: 45 }, { hour: 9, minute: 55 }, { hour: 10, minute: 5 },
+      { hour: 10, minute: 20 }, { hour: 10, minute: 35 }, { hour: 10, minute: 50 },
+      { hour: 11, minute: 5 }, { hour: 11, minute: 20 }, { hour: 11, minute: 35 },
+      { hour: 11, minute: 50 }, { hour: 12, minute: 5 }, { hour: 12, minute: 20 },
+      { hour: 12, minute: 35 }, { hour: 12, minute: 50 }, { hour: 13, minute: 5 },
+      { hour: 13, minute: 20 }, { hour: 13, minute: 30 }, { hour: 13, minute: 40 },
+      { hour: 13, minute: 50 }, { hour: 14, minute: 0 }, { hour: 14, minute: 10 },
+      { hour: 14, minute: 20 }, { hour: 14, minute: 30 }, { hour: 14, minute: 40 },
+      { hour: 14, minute: 50 }, { hour: 15, minute: 0 }, { hour: 15, minute: 10 },
+      { hour: 15, minute: 20 }, { hour: 15, minute: 30 }, { hour: 15, minute: 40 },
+      { hour: 15, minute: 50 }, { hour: 16, minute: 0 }, { hour: 16, minute: 10 },
+      { hour: 16, minute: 20 }, { hour: 16, minute: 30 }, { hour: 16, minute: 40 },
+      { hour: 16, minute: 55 }, { hour: 17, minute: 10 }, { hour: 17, minute: 20 },
+      { hour: 17, minute: 35 }, { hour: 17, minute: 45 }, { hour: 18, minute: 0 },
+      { hour: 18, minute: 10 }, { hour: 18, minute: 20 }, { hour: 18, minute: 25 },
+      { hour: 18, minute: 35 }, { hour: 18, minute: 45 }, { hour: 18, minute: 50 },
+      { hour: 19, minute: 0 }, { hour: 19, minute: 10 }, { hour: 19, minute: 15 },
+      { hour: 19, minute: 25 }, { hour: 19, minute: 35 }, { hour: 19, minute: 40 },
+      { hour: 19, minute: 50 }, { hour: 20, minute: 5 }, { hour: 20, minute: 15 },
+      { hour: 20, minute: 30 }, { hour: 20, minute: 40 }, { hour: 20, minute: 55 },
+      { hour: 21, minute: 5 }, { hour: 21, minute: 20 }, { hour: 21, minute: 30 },
+      { hour: 21, minute: 45 }, { hour: 21, minute: 55 }, { hour: 22, minute: 10 },
+      { hour: 22, minute: 20 }, { hour: 22, minute: 30 }, { hour: 22, minute: 40 },
+      { hour: 22, minute: 50 }, { hour: 23, minute: 0 }, { hour: 23, minute: 15 }
     ];
 
     const busCTimesWeekday = [
-      { hour: 9, minute: 15 },
-      { hour: 10, minute: 15 },
-      { hour: 11, minute: 15 },
-      { hour: 12, minute: 15 },
-      { hour: 13, minute: 15 },
-      { hour: 14, minute: 15 },
-      { hour: 15, minute: 15 },
-      { hour: 16, minute: 15 },
-      { hour: 17, minute: 15 },
-      { hour: 20, minute: 15 },
-      { hour: 21, minute: 15 },
-      { hour: 22, minute: 15 }
+      { hour: 9, minute: 15 }, { hour: 10, minute: 15 }, { hour: 11, minute: 15 },
+      { hour: 12, minute: 15 }, { hour: 13, minute: 15 }, { hour: 14, minute: 15 },
+      { hour: 15, minute: 15 }, { hour: 16, minute: 15 }, { hour: 17, minute: 15 },
+      { hour: 20, minute: 15 }, { hour: 21, minute: 15 }, { hour: 22, minute: 15 }
     ];
 
-    // ── Weekend Timetables (Sat & Sun) ───────────────────────────
+    // ── Weekend Timetables (Sat & Sun) ──────────────────────────────────────
     const busATimesWeekend = [
-      { hour: 6, minute: 30 },
-      { hour: 6, minute: 40 },
-      { hour: 6, minute: 50 },
-      { hour: 7, minute: 0 },
-      { hour: 7, minute: 10 },
-      { hour: 7, minute: 20 },
-      { hour: 7, minute: 30 },
-      { hour: 7, minute: 40 },
-      { hour: 7, minute: 50 },
-      { hour: 8, minute: 0 },
-      { hour: 8, minute: 10 },
-      { hour: 8, minute: 20 },
-      { hour: 8, minute: 30 },
-      { hour: 8, minute: 40 },
-      { hour: 8, minute: 50 },
-      { hour: 9, minute: 0 },
-      { hour: 9, minute: 10 },
-      { hour: 9, minute: 20 },
-      { hour: 9, minute: 30 },
-      { hour: 9, minute: 40 },
-      { hour: 9, minute: 55 },
-      { hour: 10, minute: 10 },
-      { hour: 10, minute: 25 },
-      { hour: 10, minute: 40 },
-      { hour: 10, minute: 55 },
-      { hour: 11, minute: 10 },
-      { hour: 11, minute: 25 },
-      { hour: 11, minute: 40 },
-      { hour: 11, minute: 55 },
-      { hour: 12, minute: 5 },
-      { hour: 12, minute: 10 },
-      { hour: 12, minute: 15 },
-      { hour: 12, minute: 25 },
-      { hour: 12, minute: 30 },
-      { hour: 12, minute: 35 },
-      { hour: 12, minute: 45 },
-      { hour: 12, minute: 50 },
-      { hour: 12, minute: 55 },
-      { hour: 13, minute: 5 },
-      { hour: 13, minute: 10 },
-      { hour: 13, minute: 15 },
-      { hour: 13, minute: 25 },
-      { hour: 13, minute: 30 },
-      { hour: 13, minute: 35 },
-      { hour: 13, minute: 45 },
-      { hour: 13, minute: 50 },
-      { hour: 13, minute: 55 },
-      { hour: 14, minute: 5 },
-      { hour: 14, minute: 10 },
-      { hour: 14, minute: 15 },
-      { hour: 14, minute: 25 },
-      { hour: 14, minute: 30 },
-      { hour: 14, minute: 40 },
-      { hour: 14, minute: 55 },
-      { hour: 15, minute: 10 },
-      { hour: 15, minute: 25 },
-      { hour: 15, minute: 40 },
-      { hour: 15, minute: 55 },
-      { hour: 16, minute: 5 },
-      { hour: 16, minute: 15 },
-      { hour: 16, minute: 25 },
-      { hour: 16, minute: 35 },
-      { hour: 16, minute: 45 },
-      { hour: 16, minute: 55 },
-      { hour: 17, minute: 0 },
-      { hour: 17, minute: 5 },
-      { hour: 17, minute: 15 },
-      { hour: 17, minute: 20 },
-      { hour: 17, minute: 25 },
-      { hour: 17, minute: 35 },
-      { hour: 17, minute: 40 },
-      { hour: 17, minute: 45 },
-      { hour: 17, minute: 55 },
-      { hour: 18, minute: 0 },
-      { hour: 18, minute: 5 },
-      { hour: 18, minute: 15 },
-      { hour: 18, minute: 20 },
-      { hour: 18, minute: 25 },
-      { hour: 18, minute: 35 },
-      { hour: 18, minute: 40 },
-      { hour: 18, minute: 45 },
-      { hour: 18, minute: 55 },
-      { hour: 19, minute: 0 },
-      { hour: 19, minute: 15 },
-      { hour: 19, minute: 30 },
-      { hour: 19, minute: 45 },
-      { hour: 20, minute: 0 },
-      { hour: 20, minute: 15 },
-      { hour: 20, minute: 30 },
-      { hour: 20, minute: 45 },
-      { hour: 21, minute: 0 },
-      { hour: 21, minute: 15 },
-      { hour: 21, minute: 30 },
-      { hour: 21, minute: 45 },
-      { hour: 22, minute: 0 },
-      { hour: 22, minute: 10 },
-      { hour: 22, minute: 20 },
-      { hour: 22, minute: 30 },
-      { hour: 22, minute: 40 },
-      { hour: 22, minute: 50 },
-      { hour: 23, minute: 0 }
+      { hour: 6, minute: 30 }, { hour: 6, minute: 40 }, { hour: 6, minute: 50 },
+      { hour: 7, minute: 0 }, { hour: 7, minute: 10 }, { hour: 7, minute: 20 },
+      { hour: 7, minute: 30 }, { hour: 7, minute: 40 }, { hour: 7, minute: 50 },
+      { hour: 8, minute: 0 }, { hour: 8, minute: 10 }, { hour: 8, minute: 20 },
+      { hour: 8, minute: 30 }, { hour: 8, minute: 40 }, { hour: 8, minute: 50 },
+      { hour: 9, minute: 0 }, { hour: 9, minute: 10 }, { hour: 9, minute: 20 },
+      { hour: 9, minute: 30 }, { hour: 9, minute: 40 }, { hour: 9, minute: 55 },
+      { hour: 10, minute: 10 }, { hour: 10, minute: 25 }, { hour: 10, minute: 40 },
+      { hour: 10, minute: 55 }, { hour: 11, minute: 10 }, { hour: 11, minute: 25 },
+      { hour: 11, minute: 40 }, { hour: 11, minute: 55 }, { hour: 12, minute: 5 },
+      { hour: 12, minute: 10 }, { hour: 12, minute: 15 }, { hour: 12, minute: 25 },
+      { hour: 12, minute: 30 }, { hour: 12, minute: 35 }, { hour: 12, minute: 45 },
+      { hour: 12, minute: 50 }, { hour: 12, minute: 55 }, { hour: 13, minute: 5 },
+      { hour: 13, minute: 10 }, { hour: 13, minute: 15 }, { hour: 13, minute: 25 },
+      { hour: 13, minute: 30 }, { hour: 13, minute: 35 }, { hour: 13, minute: 45 },
+      { hour: 13, minute: 50 }, { hour: 13, minute: 55 }, { hour: 14, minute: 5 },
+      { hour: 14, minute: 10 }, { hour: 14, minute: 15 }, { hour: 14, minute: 25 },
+      { hour: 14, minute: 30 }, { hour: 14, minute: 40 }, { hour: 14, minute: 55 },
+      { hour: 15, minute: 10 }, { hour: 15, minute: 25 }, { hour: 15, minute: 40 },
+      { hour: 15, minute: 55 }, { hour: 16, minute: 5 }, { hour: 16, minute: 15 },
+      { hour: 16, minute: 25 }, { hour: 16, minute: 35 }, { hour: 16, minute: 45 },
+      { hour: 16, minute: 55 }, { hour: 17, minute: 0 }, { hour: 17, minute: 5 },
+      { hour: 17, minute: 15 }, { hour: 17, minute: 20 }, { hour: 17, minute: 25 },
+      { hour: 17, minute: 35 }, { hour: 17, minute: 40 }, { hour: 17, minute: 45 },
+      { hour: 17, minute: 55 }, { hour: 18, minute: 0 }, { hour: 18, minute: 5 },
+      { hour: 18, minute: 15 }, { hour: 18, minute: 20 }, { hour: 18, minute: 25 },
+      { hour: 18, minute: 35 }, { hour: 18, minute: 40 }, { hour: 18, minute: 45 },
+      { hour: 18, minute: 55 }, { hour: 19, minute: 0 }, { hour: 19, minute: 15 },
+      { hour: 19, minute: 30 }, { hour: 19, minute: 45 }, { hour: 20, minute: 0 },
+      { hour: 20, minute: 15 }, { hour: 20, minute: 30 }, { hour: 20, minute: 45 },
+      { hour: 21, minute: 0 }, { hour: 21, minute: 15 }, { hour: 21, minute: 30 },
+      { hour: 21, minute: 45 }, { hour: 22, minute: 0 }, { hour: 22, minute: 10 },
+      { hour: 22, minute: 20 }, { hour: 22, minute: 30 }, { hour: 22, minute: 40 },
+      { hour: 22, minute: 50 }, { hour: 23, minute: 0 }
     ];
 
     const busBTimesWeekend = [
-      { hour: 6, minute: 35 },
-      { hour: 6, minute: 45 },
-      { hour: 6, minute: 55 },
-      { hour: 7, minute: 5 },
-      { hour: 7, minute: 15 },
-      { hour: 7, minute: 25 },
-      { hour: 7, minute: 35 },
-      { hour: 7, minute: 45 },
-      { hour: 7, minute: 55 },
-      { hour: 8, minute: 5 },
-      { hour: 8, minute: 15 },
-      { hour: 8, minute: 25 },
-      { hour: 8, minute: 35 },
-      { hour: 8, minute: 45 },
-      { hour: 8, minute: 55 },
-      { hour: 9, minute: 5 },
-      { hour: 9, minute: 15 },
-      { hour: 9, minute: 25 },
-      { hour: 9, minute: 35 },
-      { hour: 9, minute: 45 },
-      { hour: 10, minute: 0 },
-      { hour: 10, minute: 15 },
-      { hour: 10, minute: 30 },
-      { hour: 10, minute: 45 },
-      { hour: 11, minute: 0 },
-      { hour: 11, minute: 15 },
-      { hour: 11, minute: 30 },
-      { hour: 11, minute: 45 },
-      { hour: 12, minute: 0 },
-      { hour: 12, minute: 10 },
-      { hour: 12, minute: 15 },
-      { hour: 12, minute: 25 },
-      { hour: 12, minute: 35 },
-      { hour: 12, minute: 45 },
-      { hour: 12, minute: 55 },
-      { hour: 13, minute: 0 },
-      { hour: 13, minute: 10 },
-      { hour: 13, minute: 20 },
-      { hour: 13, minute: 25 },
-      { hour: 13, minute: 35 },
-      { hour: 13, minute: 45 },
-      { hour: 13, minute: 50 },
-      { hour: 14, minute: 0 },
-      { hour: 14, minute: 10 },
-      { hour: 14, minute: 15 },
-      { hour: 14, minute: 25 },
-      { hour: 14, minute: 40 },
-      { hour: 14, minute: 55 },
-      { hour: 15, minute: 10 },
-      { hour: 15, minute: 25 },
-      { hour: 15, minute: 40 },
-      { hour: 15, minute: 50 },
-      { hour: 16, minute: 0 },
-      { hour: 16, minute: 10 },
-      { hour: 16, minute: 20 },
-      { hour: 16, minute: 30 },
-      { hour: 16, minute: 40 },
-      { hour: 16, minute: 50 },
-      { hour: 17, minute: 0 },
-      { hour: 17, minute: 10 },
-      { hour: 17, minute: 20 },
-      { hour: 17, minute: 25 },
-      { hour: 17, minute: 35 },
-      { hour: 17, minute: 45 },
-      { hour: 17, minute: 50 },
-      { hour: 18, minute: 0 },
-      { hour: 18, minute: 10 },
-      { hour: 18, minute: 15 },
-      { hour: 18, minute: 25 },
-      { hour: 18, minute: 35 },
-      { hour: 18, minute: 40 },
-      { hour: 18, minute: 50 },
-      { hour: 19, minute: 5 },
-      { hour: 19, minute: 15 },
-      { hour: 19, minute: 30 },
-      { hour: 19, minute: 40 },
-      { hour: 19, minute: 55 },
-      { hour: 20, minute: 5 },
-      { hour: 20, minute: 20 },
-      { hour: 20, minute: 30 },
-      { hour: 20, minute: 45 },
-      { hour: 20, minute: 55 },
-      { hour: 21, minute: 10 },
-      { hour: 21, minute: 20 },
-      { hour: 21, minute: 35 },
-      { hour: 21, minute: 45 },
-      { hour: 21, minute: 55 },
-      { hour: 22, minute: 5 },
-      { hour: 22, minute: 15 },
-      { hour: 22, minute: 25 },
-      { hour: 22, minute: 35 },
-      { hour: 22, minute: 45 },
-      { hour: 23, minute: 0 },
+      { hour: 6, minute: 35 }, { hour: 6, minute: 45 }, { hour: 6, minute: 55 },
+      { hour: 7, minute: 5 }, { hour: 7, minute: 15 }, { hour: 7, minute: 25 },
+      { hour: 7, minute: 35 }, { hour: 7, minute: 45 }, { hour: 7, minute: 55 },
+      { hour: 8, minute: 5 }, { hour: 8, minute: 15 }, { hour: 8, minute: 25 },
+      { hour: 8, minute: 35 }, { hour: 8, minute: 45 }, { hour: 8, minute: 55 },
+      { hour: 9, minute: 5 }, { hour: 9, minute: 15 }, { hour: 9, minute: 25 },
+      { hour: 9, minute: 35 }, { hour: 9, minute: 45 }, { hour: 10, minute: 0 },
+      { hour: 10, minute: 15 }, { hour: 10, minute: 30 }, { hour: 10, minute: 45 },
+      { hour: 11, minute: 0 }, { hour: 11, minute: 15 }, { hour: 11, minute: 30 },
+      { hour: 11, minute: 45 }, { hour: 12, minute: 0 }, { hour: 12, minute: 10 },
+      { hour: 12, minute: 15 }, { hour: 12, minute: 25 }, { hour: 12, minute: 35 },
+      { hour: 12, minute: 45 }, { hour: 12, minute: 55 }, { hour: 13, minute: 0 },
+      { hour: 13, minute: 10 }, { hour: 13, minute: 20 }, { hour: 13, minute: 25 },
+      { hour: 13, minute: 35 }, { hour: 13, minute: 45 }, { hour: 13, minute: 50 },
+      { hour: 14, minute: 0 }, { hour: 14, minute: 10 }, { hour: 14, minute: 15 },
+      { hour: 14, minute: 25 }, { hour: 14, minute: 40 }, { hour: 14, minute: 55 },
+      { hour: 15, minute: 10 }, { hour: 15, minute: 25 }, { hour: 15, minute: 40 },
+      { hour: 15, minute: 50 }, { hour: 16, minute: 0 }, { hour: 16, minute: 10 },
+      { hour: 16, minute: 20 }, { hour: 16, minute: 30 }, { hour: 16, minute: 40 },
+      { hour: 16, minute: 50 }, { hour: 17, minute: 0 }, { hour: 17, minute: 10 },
+      { hour: 17, minute: 20 }, { hour: 17, minute: 25 }, { hour: 17, minute: 35 },
+      { hour: 17, minute: 45 }, { hour: 17, minute: 50 }, { hour: 18, minute: 0 },
+      { hour: 18, minute: 10 }, { hour: 18, minute: 15 }, { hour: 18, minute: 25 },
+      { hour: 18, minute: 35 }, { hour: 18, minute: 40 }, { hour: 18, minute: 50 },
+      { hour: 19, minute: 5 }, { hour: 19, minute: 15 }, { hour: 19, minute: 30 },
+      { hour: 19, minute: 40 }, { hour: 19, minute: 55 }, { hour: 20, minute: 5 },
+      { hour: 20, minute: 20 }, { hour: 20, minute: 30 }, { hour: 20, minute: 45 },
+      { hour: 20, minute: 55 }, { hour: 21, minute: 10 }, { hour: 21, minute: 20 },
+      { hour: 21, minute: 35 }, { hour: 21, minute: 45 }, { hour: 21, minute: 55 },
+      { hour: 22, minute: 5 }, { hour: 22, minute: 15 }, { hour: 22, minute: 25 },
+      { hour: 22, minute: 35 }, { hour: 22, minute: 45 }, { hour: 23, minute: 0 },
       { hour: 23, minute: 15 }
     ];
 
     const busCTimesWeekend = [
-      { hour: 06, minute: 30 },
-      { hour: 07, minute: 30 },
-      { hour: 08, minute: 30 },
-      { hour: 09, minute: 30 },
-      { hour: 10, minute: 30 },
-      { hour: 11, minute: 30 },
-      { hour: 14, minute: 30 },
-      { hour: 15, minute: 30 },
-      { hour: 16, minute: 30 },
-      { hour: 19, minute: 30 },
-      { hour: 20, minute: 30 },
-      { hour: 21, minute: 30 },
+      { hour: 6, minute: 30 }, { hour: 7, minute: 30 }, { hour: 8, minute: 30 },
+      { hour: 9, minute: 30 }, { hour: 10, minute: 30 }, { hour: 11, minute: 30 },
+      { hour: 14, minute: 30 }, { hour: 15, minute: 30 }, { hour: 16, minute: 30 },
+      { hour: 19, minute: 30 }, { hour: 20, minute: 30 }, { hour: 21, minute: 30 },
       { hour: 22, minute: 30 }
     ];
 
-    // ── KMB 74K real-time (from Tai Po Market Station terminus) ────────────────
-    const KMB_STOP_ID = "94A3E9298FD887C6";
+    // ── KMB 74K real-time ────────────────────────────────────────────────────
     const KMB_ROUTE = "74K";
     const KMB_SERVICE_TYPES = ["1", "2"];
 
-    let kmbCache = [];
+    // Tai Po Market Station Bus Terminus (departures)
+    const TAIPO_STOP = "94A3E9298FD887C6";
+    let taipoCache = [];
 
-    async function fetchKMBETAs() {
+    // EdUHK TP893 (arrivals)
+    const EDUHK_STOP = "DA9843B8F12ED700";  // TP893 - confirmed
+    let eduhkCache = [];
+
+    async function fetchKMBETAs(stopId, cacheVar) {
       let etas = [];
       const now = new Date();
 
       for (const st of KMB_SERVICE_TYPES) {
         try {
-          const url = `https://data.etabus.gov.hk/v1/transport/kmb/eta/${KMB_STOP_ID}/${KMB_ROUTE}/${st}`;
+          const url = `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${KMB_ROUTE}/${st}`;
           const res = await fetch(url);
           if (!res.ok) continue;
           const json = await res.json();
           if (json.data && json.data.length > 0) {
-            // STRICT FILTER: only scheduled departures (seq === 1) and future
-            const departures = json.data
-              .filter(e => e.eta && new Date(e.eta) > now && e.seq === 1)
+            const items = json.data
+              .filter(e => e.eta && new Date(e.eta) > now)
+              // For terminus (Tai Po): use seq === 1 for scheduled departures
+              // For mid-stop (EdUHK): comment out to show all arrivals
+              .filter(e => stopId === TAIPO_STOP ? e.seq === 1 : true)
               .sort((a, b) => new Date(a.eta) - new Date(b.eta));
-            etas = etas.concat(departures);
+            etas = etas.concat(items);
           }
         } catch (err) {
-          console.warn("KMB ETA fetch error for type", st, err);
+          console.warn(`ETA fetch error for ${stopId}`, err);
         }
       }
-      
-	// Dedupe by eta timestamp & sort (latest first 3)
+
       etas = etas
         .filter((e, i, self) => self.findIndex(t => t.eta === e.eta) === i)
         .sort((a, b) => new Date(a.eta) - new Date(b.eta))
         .slice(0, 3);
 
-      kmbCache = etas;
-    }
-    
-    const EDUHK_STOP = "DA9843B8F12ED700";  // Confirmed for TP893 - The Education University of HK
-    let eduhkCache = [];
-
-    async function fetchEdUHKETAs() {
-      let etas = [];
-      const now = new Date();
-
-      for (const st of KMB_SERVICE_TYPES) {  // ["1", "2"]
-        try {
-          const url = `https://data.etabus.gov.hk/v1/transport/kmb/eta/${EDUHK_STOP}/${KMB_ROUTE}/${st}`;
-          const res = await fetch(url);
-          if (!res.ok) continue;
-          const json = await res.json();
-          if (json.data && json.data.length > 0) {
-            const arrivals = json.data
-              .filter(e => e.eta && new Date(e.eta) > now)  // All future arrivals at this stop
-              // Optional: .filter(e => e.seq === 1) if you want only scheduled/timetable ones
-              .sort((a, b) => new Date(a.eta) - new Date(b.eta));
-            etas = etas.concat(arrivals);
-          }
-        } catch (err) {
-          console.warn("EdUHK (TP893) ETA fetch error", err);
-        }
-      }
-
-      // Dedupe by eta, sort, limit to next 3
-      etas = etas
-        .filter((e, i, self) => self.findIndex(t => t.eta === e.eta) === i)
-        .sort((a, b) => new Date(a.eta) - new Date(b.eta))
-        .slice(0, 3);
-
-      eduhkCache = etas;
+      if (stopId === TAIPO_STOP) taipoCache = etas;
+      else eduhkCache = etas;
     }
 
     function formatKMBDiff(etaStr) {
@@ -621,8 +326,8 @@
       const seconds = Math.floor((diffMs % 60000) / 1000);
       return `${minutes}.${seconds.toString().padStart(2, '0')}`;
     }
-    
-    // ── Your original helpers (slightly adjusted) ───────────────────────────────
+
+    // ── Shuttle helpers (unchanged) ─────────────────────────────────────────
     function getTimetable(bus) {
       const now = new Date();
       const isWeekend = now.getDay() === 0 || now.getDay() === 6;
@@ -686,7 +391,7 @@
       return allArrivals.slice(0, n);
     }
 
-    // ── Update Functions ───────────────────────────────────────────────────────
+    // ── Update Functions ─────────────────────────────────────────────────────
     function updateHeader() {
       const now = new Date();
       document.getElementById('current-date').textContent = formatCurrentDate(now);
@@ -700,7 +405,7 @@
 
       let html = '';
 
-      // Shuttle buses A/B/C (unchanged)
+      // Shuttle buses
       nextShuttle.forEach(arrival => {
         const diffMs = arrival.time - now;
         const hours = arrival.time.getHours().toString().padStart(2, '0');
@@ -717,7 +422,41 @@
         `;
       });
 
-      // 74K real-time ── now up to 3 buses
+      // ── Public Bus 74K ───────────────────────────────────────────────────
+      html += '<tr class="section-header"><td colspan="2">Public Bus 74K</td></tr>';
+
+      // Tai Po Market Station (departures)
+      if (taipoCache.length > 0) {
+        taipoCache.forEach(eta => {
+          const etaDate = new Date(eta.eta);
+          const hours = etaDate.getHours().toString().padStart(2, '0');
+          const minutes = etaDate.getMinutes().toString().padStart(2, '0');
+          const scheduled = `${hours}:${minutes}`;
+          const remark = eta.rmk_en ? `(${eta.rmk_en})` : '';
+          html += `
+            <tr>
+              <td class="bus-name">
+                74K from Tai Po Market
+                <span style="color:#666; font-size:0.82em; margin-left:10px; letter-spacing:0.02em;">${scheduled}</span>
+                <span class="remark">departure ${remark}</span>
+              </td>
+              <td class="wait-mins">${formatKMBDiff(eta.eta)}</td>
+            </tr>
+          `;
+        });
+      } else {
+        html += `
+          <tr>
+            <td class="bus-name">
+              74K from Tai Po Market
+              <span class="remark">departure • loading...</span>
+            </td>
+            <td class="wait-mins">--.--</td>
+          </tr>
+        `;
+      }
+
+      // EdUHK TP893 (arrivals)
       if (eduhkCache.length > 0) {
         eduhkCache.forEach(eta => {
           const etaDate = new Date(eta.eta);
@@ -747,36 +486,6 @@
           </tr>
         `;
       }
-      
-      if (eduhkCache.length > 0) {
-        eduhkCache.forEach(eta => {
-          const etaDate = new Date(eta.eta);
-          const hours = etaDate.getHours().toString().padStart(2, '0');
-          const minutes = etaDate.getMinutes().toString().padStart(2, '0');
-          const scheduled = `${hours}:${minutes}`;
-          const remark = eta.rmk_en ? `(${eta.rmk_en})` : '';
-          html += `
-            <tr>
-              <td class="bus-name">
-                74K at EdUHK
-                <span style="color:#666; font-size:0.82em; margin-left:10px; letter-spacing:0.02em;">${scheduled}</span>
-                <span class="remark">arrival at campus ${remark}</span>
-              </td>
-              <td class="wait-mins">${formatKMBDiff(eta.eta)}</td>
-            </tr>
-          `;
-        });
-      } else {
-        html += `
-          <tr>
-            <td class="bus-name">
-              74K at EdUHK
-              <span class="remark">arrival at campus • loading...</span>
-            </td>
-            <td class="wait-mins">--.--</td>
-          </tr>
-        `;
-      }
 
       table.innerHTML = html;
     }
@@ -786,13 +495,13 @@
       await updateArrivalsTable();
     }
 
-    // ── Start ──────────────────────────────────────────────────────────────────
-    fetchKMBETAs();       // Tai Po Market
-    fetchEdUHKETAs();     // EdUHK TP893
-    setInterval(fetchKMBETAs, 30000);
-    setInterval(fetchEdUHKETAs, 30000);
-    setInterval(updateAll, 1000);     // update clock & display every 1s
-    updateAll();                      // initial call
+    // ── Start ────────────────────────────────────────────────────────────────
+    fetchKMBETAs(TAIPO_STOP, taipoCache);
+    fetchKMBETAs(EDUHK_STOP, eduhkCache);
+    setInterval(() => fetchKMBETAs(TAIPO_STOP, taipoCache), 30000);
+    setInterval(() => fetchKMBETAs(EDUHK_STOP, eduhkCache), 30000);
+    setInterval(updateAll, 1000);
+    updateAll();
   </script>
 </body>
 </html>
