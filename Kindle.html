@@ -28,6 +28,7 @@
       margin-left: auto;
       margin-right: auto;
     }
+
     .header-bar {
       background: #597ab9;
       color: #fff;
@@ -38,9 +39,24 @@
       padding: 0 24px;
       letter-spacing: 0.03em;
       line-height: 54px;
+
+      /* FIX for Kindle browser layout issues */
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* date left, time right */
+      gap: 12px;
     }
-    #current-date { font-size: 0.78em; letter-spacing: 0.04em; display:inline-block; width:48%; }
-    #current-time { font-size: 0.78em; letter-spacing: 0.04em; display:inline-block; width:48%; text-align:right; }
+
+    #current-date {
+      font-size: 0.78em;
+      letter-spacing: 0.04em;
+    }
+    #current-time {
+      font-size: 0.78em;
+      letter-spacing: 0.04em;
+      text-align: right;
+      margin-left: auto;
+    }
 
     .arrivals-table {
       width: 100%;
@@ -82,9 +98,20 @@
       line-height: 1.5;
       border-top: 2px solid #dbe5f2;
     }
+
     @media (max-width: 500px) {
       .mtr-screen { min-width: 0; max-width: 98vw; }
-      .header-bar { font-size: 1.08em; height: 38px; line-height: 38px; padding: 0 12px; }
+      .header-bar {
+        font-size: 1.08em;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 12px;
+
+        /* keep the flex behavior */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
       .arrivals-table td { padding: 0 12px; }
       .arrivals-table tr { font-size: 1em; height: 38px; }
       .wait-mins { min-width: 56px; font-size: 1em; }
@@ -118,7 +145,7 @@
      *  - Weekday vs Weekend timetable selection
      *  - Next bus calculation
      *  - Countdown
-     *********************************************************************/
+     ***********************************************************************/
 
     function pad2(n) {
       n = String(n);
@@ -604,8 +631,7 @@
       );
 
       var out = [];
-      var i;
-      for (i = 0; i < busTimes.length; i++) {
+      for (var i = 0; i < busTimes.length; i++) {
         var t = busTimes[i];
         out.push(new Date(
           base.getFullYear(),
@@ -625,9 +651,8 @@
 
       var todayTimes = getBusDateTimesForDay(times, 0);
       var todayBuses = [];
-      var i;
 
-      for (i = 0; i < todayTimes.length; i++) {
+      for (var i = 0; i < todayTimes.length; i++) {
         if (todayTimes[i] > hkNow) todayBuses.push(todayTimes[i]);
       }
 
