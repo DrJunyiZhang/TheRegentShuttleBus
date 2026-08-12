@@ -7,40 +7,57 @@
   <style>
     body {
       background: #e6ecf3;
-      /* Kindle may not load web fonts reliably */
       font-family: Arial, Helvetica, sans-serif;
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+
+      /* Avoid flexbox for Kindle compatibility */
+      display: block;
+      text-align: center;
     }
+
     .mtr-screen {
-      margin-top: 40px;
+      margin: 40px auto 0 auto;
       background: #e6ecf3;
       border-radius: 18px;
-      box-shadow: 0 6px 28px #0002;
+      box-shadow: 0 6px 28px rgba(0,0,0,0.13);
       padding: 0;
       min-width: 350px;
       max-width: 400px;
-      width: 100%;
+      width: 98%;
       overflow: hidden;
+      text-align: left;
     }
+
     .header-bar {
       background: #597ab9;
       color: #fff;
       font-size: 1.7em;
       font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+
+      /* no flex */
       height: 54px;
       padding: 0 24px;
       letter-spacing: 0.03em;
+      line-height: 54px;
     }
-    #current-date { font-size: 0.78em; letter-spacing: 0.04em; }
+    .header-bar span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    #current-date {
+      font-size: 0.78em;
+      letter-spacing: 0.04em;
+      width: 48%;
+    }
+    #current-time {
+      font-size: 0.78em;
+      letter-spacing: 0.04em;
+      width: 48%;
+      text-align: right;
+    }
+
     .arrivals-table {
       width: 100%;
       border-collapse: collapse;
@@ -52,16 +69,17 @@
     }
     .arrivals-table tr:nth-child(odd) { background: #f4f7fa; }
     .arrivals-table tr:nth-child(even) { background: #dbe5f2; }
+
     .arrivals-table td {
       padding: 0 26px;
       vertical-align: middle;
       border: none;
     }
+
     .bus-name {
       color: #384e6c;
       font-size: 1.15em;
       font-weight: bold;
-      text-align: left;
       letter-spacing: 0.04em;
     }
     .wait-mins {
@@ -72,6 +90,7 @@
       letter-spacing: 0.04em;
       min-width: 80px;
     }
+
     .footer-message {
       background: #f8fafd;
       padding: 16px 20px;
@@ -81,17 +100,20 @@
       line-height: 1.5;
       border-top: 2px solid #dbe5f2;
     }
+
     @media (max-width: 500px) {
       .mtr-screen { min-width: 0; max-width: 98vw; }
-      .header-bar { font-size: 1.08em; height: 38px; padding: 0 12px; }
+      .header-bar { font-size: 1.08em; height: 38px; line-height: 38px; padding: 0 12px; }
       .arrivals-table td { padding: 0 12px; }
       .arrivals-table tr { font-size: 1em; height: 38px; }
       .wait-mins { min-width: 56px; font-size: 1em; }
       .bus-name { font-size: 1em; }
       #current-date { font-size: 0.68em; }
+      #current-time { font-size: 0.68em; }
     }
   </style>
 </head>
+
 <body>
   <div class="mtr-screen">
     <div class="header-bar">
@@ -109,15 +131,17 @@
   </div>
 
   <script>
-    // ── Helpers (avoid padStart for compatibility) ────────────────────────────
     function pad2(n) {
       n = String(n);
       return (n.length === 1) ? ("0" + n) : n;
     }
 
+    // Weekday names to avoid toLocaleString options (Kindle quirks)
+    var WEEKDAY_SHORT = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
     // ── Weekday Timetables (Mon–Fri) ────────────────────────────────────────
     var busATimesWeekday = [
-      { hour: 6, minute: 30 },{ hour: 6, minute: 40 },{ hour: 6, minute: 50 },
+      { hour: 6, minute: 30},{ hour: 6, minute: 40 },{ hour: 6, minute: 50 },
       { hour: 7, minute: 0 },{ hour: 7, minute: 5 },{ hour: 7, minute: 10 },
       { hour: 7, minute: 20 },{ hour: 7, minute: 25 },{ hour: 7, minute: 30 },
       { hour: 7, minute: 40 },{ hour: 7, minute: 45 },{ hour: 7, minute: 50 },
@@ -144,7 +168,7 @@
       { hour: 19, minute: 0 },{ hour: 19, minute: 10 },{ hour: 19, minute: 20 },
       { hour: 19, minute: 20 },{ hour: 19, minute: 30 },{ hour: 19, minute: 40 },
       { hour: 19, minute: 45 },{ hour: 19, minute: 50 },{ hour: 20, minute: 0 },
-      { hour: 20, minute: 5 },{ hour: 20,minute: 20 },{ hour: 20, minute: 35 },
+      { hour: 20, minute: 5 },{ hour: 20, minute: 20 },{ hour: 20, minute: 35 },
       { hour: 20, minute: 50 },{ hour: 21, minute: 5 },{ hour: 21, minute: 20 },
       { hour: 21, minute: 35 },{ hour: 21, minute: 50 },{ hour: 22, minute: 5 },
       { hour: 22, minute: 20 },{ hour: 22, minute: 30 },{ hour: 22, minute: 40 },
@@ -169,7 +193,7 @@
       { hour: 12, minute: 35 },{ hour: 12, minute: 50 },{ hour: 13, minute: 5 },
       { hour: 13, minute: 20 },{ hour: 13, minute: 30 },{ hour: 13, minute: 40 },
       { hour: 13, minute: 50 },{ hour: 14, minute: 0 },{ hour: 14, minute: 10 },
-      { hour: 14, minute: 20 },{ hour: 14, minute: 30 },{ hour: 14, minute: 40 },
+      { hour: 14, minute: 20 },{ hour: 14,minute: 30 },{ hour: 14, minute: 40 },
       { hour: 14, minute: 50 },{ hour: 15, minute: 0 },{ hour: 15, minute: 10 },
       { hour: 15, minute: 20 },{ hour: 15, minute: 30 },{ hour: 15, minute: 40 },
       { hour: 15, minute: 50 },{ hour: 16, minute: 0 },{ hour: 16, minute: 10 },
@@ -206,7 +230,7 @@
       { hour: 10, minute: 40 },{ hour: 10, minute: 55 },{ hour: 11, minute: 10 },
       { hour: 11, minute: 25 },{ hour: 11, minute: 40 },{ hour: 11, minute: 55 },
       { hour: 12, minute: 5 },{ hour: 12, minute: 10 },{ hour: 12, minute: 15 },
-      { hour: 12, minute: 25 },{ hour: 12, minute: 30 },{ hour: 12, minute: 35 },
+      { hour: 12, minute: 25},{ hour: 12, minute: 30 },{ hour: 12, minute: 35 },
       { hour: 12, minute: 45 },{ hour: 12, minute: 50 },{ hour: 12, minute: 55 },
       { hour: 13, minute: 5 },{ hour: 13, minute: 10 },{ hour: 13, minute: 15 },
       { hour: 13, minute: 25 },{ hour: 13, minute: 30 },{ hour: 13, minute: 35 },
@@ -251,19 +275,19 @@
       { hour: 17, minute: 20 },{ hour: 17, minute: 25 },{ hour: 17, minute: 35 },
       { hour: 17, minute: 45 },{ hour: 17, minute: 50 },{ hour: 18, minute: 0 },
       { hour: 18, minute: 10 },{ hour: 18, minute: 15 },{ hour: 18, minute: 25 },
-      { hour: 18, minute: 35 },{ hour: 18, minute: 40 },{ hour: 18, minute: 50 },
+      { hour: 18, minute: 35 },{ hour: 18, minute: 40 },{ hour: 18,minute: 50 },
       { hour: 19, minute: 5 },{ hour: 19, minute: 15 },{ hour: 19, minute: 30 },
       { hour: 19, minute: 40 },{ hour: 19, minute: 55 },{ hour: 20, minute: 5 },
       { hour: 20, minute: 20 },{ hour: 20, minute: 30 },{ hour: 20, minute: 45 },
       { hour: 20, minute: 55 },{ hour: 21, minute: 10 },{ hour: 21, minute: 20 },
       { hour: 21, minute: 35 },{ hour: 21, minute: 45 },{ hour: 21, minute: 55 },
-      { hour: 22, minute: 5 },{ hour: 22, minute: 15 },{ hour: 22, minute: 25 },
+      { hour: 22, minute: 5 },{hour: 22, minute: 15 },{ hour: 22, minute: 25 },
       { hour: 22, minute: 35 },{ hour: 22, minute: 45 },{ hour: 23, minute: 5 },
       { hour: 23, minute: 15 }
     ];
 
     var busCTimesWeekend = [
-      { hour: 9, minute: 15},{ hour: 10, minute: 15 },{ hour: 11, minute: 15 },
+      { hour: 9, minute: 15 },{ hour: 10, minute: 15 },{ hour: 11, minute: 15 },
       { hour: 12, minute: 15 },{ hour: 13, minute: 15 },{ hour: 14, minute: 15 },
       { hour: 15, minute: 15 },{ hour: 16, minute: 15 },{ hour: 17, minute: 15 },
       { hour: 20, minute: 15 },{ hour: 21, minute: 15 },{ hour: 22, minute: 15 }
@@ -283,6 +307,7 @@
 
     function getBusDateTimesForDay(busTimes, dayOffset) {
       if (dayOffset === undefined) dayOffset = 0;
+
       var now = new Date();
       var base = new Date(now.getFullYear(), now.getMonth(), now.getDate() + dayOffset);
 
@@ -299,7 +324,6 @@
       var now = new Date();
       var times = getTimetable(bus);
 
-      var buses = [];
       var todayTimes = getBusDateTimesForDay(times, 0);
 
       var todayBuses = [];
@@ -308,15 +332,17 @@
         if (todayTimes[i] > now) todayBuses.push(todayTimes[i]);
       }
 
+      var buses = [];
       if (todayBuses.length >= n) {
         for (i = 0; i < n; i++) buses.push(todayBuses[i]);
       } else {
         for (i = 0; i < todayBuses.length; i++) buses.push(todayBuses[i]);
-        var tomorrowBusesAll = getBusDateTimesForDay(times, 1);
+
+        var tomorrowBuses = getBusDateTimesForDay(times, 1);
         var needed = n - buses.length;
 
-        for (i = 0; i < tomorrowBusesAll.length && buses.length < n; i++) {
-          if (i < needed) buses.push(tomorrowBusesAll[i]);
+        for (i = 0; i < tomorrowBuses.length && buses.length < n; i++) {
+          if (i < needed) buses.push(tomorrowBuses[i]);
         }
       }
       return buses;
@@ -337,17 +363,16 @@
       var year = dateObj.getFullYear();
       var month = pad2(dateObj.getMonth() + 1);
       var day = pad2(dateObj.getDate());
-      var weekday = dateObj.toLocaleString('en-US', { weekday: 'short' });
+      var weekday = WEEKDAY_SHORT[dateObj.getDay()];
       return year + "-" + month + "-" + day + " " + weekday;
     }
 
     function getNextCombinedArrivals(n) {
       var now = new Date();
-      var i;
-
       var arrivals = [];
 
       var arrivalsA = getNextNBuses('A', n * 2);
+      var i;
       for (i = 0; i < arrivalsA.length; i++) arrivals.push({ bus: 'Bus A', time: arrivalsA[i] });
 
       var arrivalsB = getNextNBuses('B', n * 2);
@@ -356,18 +381,20 @@
       var arrivalsC = getNextNBuses('C', n * 2);
       for (i = 0; i < arrivalsC.length; i++) arrivals.push({ bus: 'Bus C', time: arrivalsC[i] });
 
-      // filter & sort
+      // Filter & sort
       var filtered = [];
       for (i = 0; i < arrivals.length; i++) {
         if (arrivals[i].time > now) filtered.push(arrivals[i]);
       }
 
-      filtered.sort(function(a, b) { return a.time - b.time; });
+      filtered.sort(function(a, b) {
+        return (a.time.getTime() - b.time.getTime());
+      });
 
       return filtered.slice(0, n);
     }
 
-    // ── Update Functions ─────────────────────────────────────────────────────
+    // ── Update Functions ─────────────────────────────────────────────
     function updateHeader() {
       var now = new Date();
       document.getElementById('current-date').textContent = formatCurrentDate(now);
@@ -384,13 +411,12 @@
 
       for (i = 0; i < nextShuttle.length; i++) {
         var arrival = nextShuttle[i];
-        var diffMs = arrival.time - now;
+        var diffMs = arrival.time.getTime() - now.getTime();
 
         var hours = pad2(arrival.time.getHours());
         var minutes = pad2(arrival.time.getMinutes());
         var scheduled = hours + ":" + minutes;
 
-        // build row with string concatenation (no template literals)
         html += '<tr>';
         html += '  <td class="bus-name">';
         html += '    ' + arrival.bus;
@@ -408,7 +434,6 @@
       updateArrivalsTable();
     }
 
-    // ── Start ───────────────────────────────────────────────────────────────
     setInterval(updateAll, 1000);
     updateAll();
   </script>
