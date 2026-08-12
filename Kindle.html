@@ -40,21 +40,32 @@
       letter-spacing: 0.03em;
       line-height: 54px;
 
-      /* FIX for Kindle browser layout issues */
+      /* Kindle-friendly flex fixes */
       display: flex;
       align-items: center;
-      justify-content: space-between; /* date left, time right */
+      justify-content: space-between;
+      flex-wrap: nowrap;
+
       gap: 12px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
+    /* Ensure they never wrap and behave correctly in flex */
     #current-date {
       font-size: 0.78em;
       letter-spacing: 0.04em;
+      white-space: nowrap;
+      flex: 1 1 auto;
+      min-width: 0; /* important for flex children */
     }
+
     #current-time {
       font-size: 0.78em;
       letter-spacing: 0.04em;
       text-align: right;
+      white-space: nowrap;
+      flex: 0 0 auto; /* keep it from being pushed */
       margin-left: auto;
     }
 
@@ -107,10 +118,15 @@
         line-height: 38px;
         padding: 0 12px;
 
-        /* keep the flex behavior */
+        /* keep flex behavior */
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: nowrap;
+
+        gap: 10px;
+        width: 100%;
+        box-sizing: border-box;
       }
       .arrivals-table td { padding: 0 12px; }
       .arrivals-table tr { font-size: 1em; height: 38px; }
@@ -267,7 +283,7 @@
       { hour: 19, minute: 20 },
       { hour: 19, minute: 20 },
       { hour: 19, minute: 30 },
-      { hour: 19, minute: 40 },
+      { hour: 19, minute: 40},
       { hour: 19, minute: 45 },
       { hour: 19, minute: 50 },
       { hour: 20, minute: 0 },
@@ -332,7 +348,7 @@
       { hour: 12, minute: 20 },
       { hour: 12, minute: 35 },
       { hour: 12, minute: 50 },
-      { hour: 13, minute: 5 },
+      { hour: 13, minute: 5},
       { hour: 13, minute: 20 },
       { hour: 13, minute: 30 },
       { hour: 13, minute: 40 },
