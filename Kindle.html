@@ -168,8 +168,6 @@
       return (n.length === 1) ? ("0" + n) : n;
     }
 
-    var WEEKDAY_SHORT = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-
     // HK is UTC+8
     var HK_OFFSET_MINUTES = 8 * 60;
 
@@ -192,8 +190,7 @@
       var year = hk.getFullYear();
       var month = pad2(hk.getMonth() + 1);
       var day = pad2(hk.getDate());
-      var weekday = WEEKDAY_SHORT[hk.getDay()];
-      return year + "-" + month + "-" + day + " " + weekday;
+      return year + "-" + month + "-" + day;
     }
 
     function formatWait(diffMs) {
