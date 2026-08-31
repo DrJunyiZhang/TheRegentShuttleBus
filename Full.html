@@ -1,0 +1,908 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Regent Shuttle Bus Arrival Info + 74K + K17/K12</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@700&display=swap');
+    body {
+      background: #e6ecf3;
+      font-family: 'Noto Sans HK', 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .mtr-screen {
+      margin-top: 40px;
+      background: #e6ecf3;
+      border-radius: 18px;
+      box-shadow: 0 6px 28px #0002;
+      padding: 0;
+      min-width: 350px;
+      max-width: 400px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .header-bar {
+      background: #597ab9;
+      color: #fff;
+      font-size: 1.7em;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 54px;
+      padding: 0 24px;
+      letter-spacing: 0.03em;
+    }
+    #current-date { font-size: 0.78em; letter-spacing: 0.04em; }
+    .arrivals-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .arrivals-table tr {
+      height: 54px;
+      font-size: 1.35em;
+      font-weight: 600;
+    }
+    .arrivals-table tr:nth-child(odd) { background: #f4f7fa; }
+    .arrivals-table tr:nth-child(even) { background: #dbe5f2; }
+    .arrivals-table td {
+      padding: 0 26px;
+      vertical-align: middle;
+      border: none;
+    }
+    .bus-name {
+      color: #384e6c;
+      font-size: 1.15em;
+      font-weight: bold;
+      text-align: left;
+      letter-spacing: 0.04em;
+    }
+    .wait-mins {
+      color: #384e6c;
+      font-size: 1.35em;
+      font-weight: bold;
+      text-align: right;
+      letter-spacing: 0.04em;
+      min-width: 80px;
+    }
+    .remark {
+      font-size: 0.70em;
+      color: #666;
+      display: block;
+      margin-top: 2px;
+      letter-spacing: 0.02em;
+    }
+    .section-header {
+      background: #597ab9;
+      color: #fff;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-align: center;
+      height: 34px;
+      line-height: 34px;
+    }
+    @media (max-width: 500px) {
+      .mtr-screen { min-width: 0; max-width: 98vw; }
+      .header-bar { font-size: 1.08em; height: 38px; padding: 0 12px; }
+      .arrivals-table td { padding: 0 12px; }
+      .arrivals-table tr { font-size: 1em; height: 38px; }
+      .wait-mins { min-width: 56px; font-size: 1em; }
+      .bus-name { font-size: 1em; }
+      #current-date { font-size: 0.68em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mtr-screen">
+    <div class="header-bar">
+      <span id="current-date"></span>
+      <span id="current-time"></span>
+    </div>
+    <table class="arrivals-table" id="arrivals-table">
+      <!-- JS fills in rows -->
+    </table>
+  </div>
+
+  <script>
+    // ── Weekday Timetables (Mon–Fri) ────────────────────────────────────────
+    const busATimesWeekday = [
+      { hour: 6, minute: 30 },
+      { hour: 6, minute: 40 },
+      { hour: 6, minute: 50 },
+      { hour: 7, minute: 0 },
+      { hour: 7, minute: 5 },
+      { hour: 7, minute: 10 },
+      { hour: 7, minute: 20 },
+      { hour: 7, minute: 25 },
+      { hour: 7, minute: 30 },
+      { hour: 7, minute: 40 },
+      { hour: 7, minute: 45 },
+      { hour: 7, minute: 50 },
+      { hour: 8, minute: 0 },
+      { hour: 8, minute: 5 },
+      { hour: 8, minute: 10 },
+      { hour: 8, minute: 20 },
+      { hour: 8, minute: 25 },
+      { hour: 8, minute: 30 },
+      { hour: 8, minute: 40 },
+      { hour: 8, minute: 45 },
+      { hour: 8, minute: 50 },
+      { hour: 9, minute: 0 },
+      { hour: 9, minute: 10 },
+      { hour: 9, minute: 20 },
+      { hour: 9, minute: 27 },
+      { hour: 9, minute: 40 },
+      { hour: 9, minute: 55 },
+      { hour: 10, minute: 10 },
+      { hour: 10, minute: 25 },
+      { hour: 10, minute: 37 },
+      { hour: 10, minute: 55 },
+      { hour: 11, minute: 8 },
+      { hour: 11, minute: 25 },
+      { hour: 11, minute: 40 },
+      { hour: 11, minute: 55 },
+      { hour: 12, minute: 10 },
+      { hour: 12, minute: 22 },
+      { hour: 12, minute: 40 },
+      { hour: 12, minute: 52 },
+      { hour: 13, minute: 10 },
+      { hour: 13, minute: 25 },
+      { hour: 13, minute: 40 },
+      { hour: 13, minute: 55 },
+      { hour: 14, minute: 10 },
+      { hour: 14, minute: 25 },
+      { hour: 14, minute: 40 },
+      { hour: 14, minute: 55 },
+      { hour: 15, minute: 5 },
+      { hour: 15, minute: 15 },
+      { hour: 15, minute: 25 },
+      { hour: 15, minute: 35 },
+      { hour: 15, minute: 45 },
+      { hour: 15, minute: 55 },
+      { hour: 16, minute: 5 },
+      { hour: 16, minute: 15 },
+      { hour: 16, minute: 25 },
+      { hour: 16, minute: 35 },
+      { hour: 16, minute: 45 },
+      { hour: 16, minute: 55 },
+      { hour: 17, minute: 5 },
+      { hour: 17, minute: 15 },
+      { hour: 17, minute: 30 },
+      { hour: 17, minute: 45 },
+      { hour: 18, minute: 0 },
+      { hour: 18, minute: 5 },
+      { hour: 18, minute: 10 },
+      { hour: 18, minute: 20 },
+      { hour: 18, minute: 30 },
+      { hour: 18, minute: 30 },
+      { hour: 18, minute: 40 },
+      { hour: 18, minute: 50 },
+      { hour: 18, minute: 55 },
+      { hour: 19, minute: 0 },
+      { hour: 19, minute: 10 },
+      { hour: 19, minute: 20 },
+      { hour: 19, minute: 20 },
+      { hour: 19, minute: 30 },
+      { hour: 19, minute: 40 },
+      { hour: 19, minute: 45 },
+      { hour: 19, minute: 50 },
+      { hour: 20, minute: 0 },
+      { hour: 20, minute: 5 },
+      { hour: 20, minute: 20 },
+      { hour: 20, minute: 35 },
+      { hour: 20, minute: 50 },
+      { hour: 21, minute: 5 },
+      { hour: 21, minute: 20 },
+      { hour: 21, minute: 35 },
+      { hour: 21, minute: 50 },
+      { hour: 22, minute: 5 },
+      { hour: 22, minute: 20 },
+      { hour: 22, minute: 30 },
+      { hour: 22, minute: 40 },
+      { hour: 22, minute: 50 },
+      { hour: 23, minute: 0 }
+    ];
+
+    const busBTimesWeekday = [
+      { hour: 6, minute: 30 },
+      { hour: 6, minute: 35 },
+      { hour: 6, minute: 45 },
+      { hour: 6, minute: 55 },
+      { hour: 6, minute: 55 },
+      { hour: 7, minute: 5 },
+      { hour: 7, minute: 10 },
+      { hour: 7, minute: 15 },
+      { hour: 7, minute: 20 },
+      { hour: 7, minute: 20 },
+      { hour: 7, minute: 30 },
+      { hour: 7, minute: 35 },
+      { hour: 7, minute: 40 },
+      { hour: 7, minute: 45 },
+      { hour: 7, minute: 50 },
+      { hour: 7, minute: 55 },
+      { hour: 8, minute: 0 },
+      { hour: 8, minute: 5 },
+      { hour: 8, minute: 10 },
+      { hour: 8, minute: 20 },
+      { hour: 8, minute: 25 },
+      { hour: 8, minute: 30 },
+      { hour: 8, minute: 35 },
+      { hour: 8, minute: 45 },
+      { hour: 8, minute: 50 },
+      { hour: 8, minute: 55 },
+      { hour: 9, minute: 5 },
+      { hour: 9, minute: 15 },
+      { hour: 9, minute: 25 },
+      { hour: 9, minute: 35 },
+      { hour: 9, minute: 45 },
+      { hour: 9, minute: 55 },
+      { hour: 10, minute: 5 },
+      { hour: 10, minute: 20 },
+      { hour: 10, minute: 35 },
+      { hour: 10, minute: 50 },
+      { hour: 11, minute: 5 },
+      { hour: 11, minute: 20 },
+      { hour: 11, minute: 35 },
+      { hour: 11, minute: 50 },
+      { hour: 12, minute: 5 },
+      { hour: 12, minute: 20 },
+      { hour: 12, minute: 35 },
+      { hour: 12, minute: 50 },
+      { hour: 13, minute: 5 },
+      { hour: 13, minute: 20 },
+      { hour: 13, minute: 30 },
+      { hour: 13, minute: 40 },
+      { hour: 13, minute: 50 },
+      { hour: 14, minute: 0 },
+      { hour: 14, minute: 10 },
+      { hour: 14, minute: 20 },
+      { hour: 14, minute: 30 },
+      { hour: 14, minute: 40 },
+      { hour: 14, minute: 50 },
+      { hour: 15, minute: 0 },
+      { hour: 15, minute: 10 },
+      { hour: 15, minute: 20 },
+      { hour: 15, minute: 30 },
+      { hour: 15, minute: 40 },
+      { hour: 15, minute: 50 },
+      { hour: 16, minute: 0 },
+      { hour: 16, minute: 10 },
+      { hour: 16, minute: 20 },
+      { hour: 16, minute: 30 },
+      { hour: 16, minute: 40 },
+      { hour: 16, minute: 55 },
+      { hour: 17, minute: 10 },
+      { hour: 17, minute: 20 },
+      { hour: 17, minute: 35 },
+      { hour: 17, minute: 45 },
+      { hour: 18, minute: 0 },
+      { hour: 18, minute: 10 },
+      { hour: 18, minute: 20 },
+      { hour: 18, minute: 25 },
+      { hour: 18, minute: 35 },
+      { hour: 18, minute: 45 },
+      { hour: 18, minute: 50 },
+      { hour: 19, minute: 0 },
+      { hour: 19, minute: 10 },
+      { hour: 19, minute: 15 },
+      { hour: 19, minute: 25 },
+      { hour: 19, minute: 35 },
+      { hour: 19, minute: 40 },
+      { hour: 19, minute: 50 },
+      { hour: 20, minute: 5 },
+      { hour: 20, minute: 15 },
+      { hour: 20, minute: 30 },
+      { hour: 20, minute: 40 },
+      { hour: 20, minute: 55 },
+      { hour: 21, minute: 5 },
+      { hour: 21, minute: 20 },
+      { hour: 21, minute: 30 },
+      { hour: 21, minute: 45 },
+      { hour: 21, minute: 55 },
+      { hour: 22, minute: 10 },
+      { hour: 22, minute: 20 },
+      { hour: 22, minute: 30 },
+      { hour: 22, minute: 40 },
+      { hour: 22, minute: 50 },
+      { hour: 23, minute: 5 },
+      { hour: 23, minute: 15 },
+    ];
+
+    const busCTimesWeekday = [
+      { hour: 9, minute: 15 },
+      { hour: 10, minute: 15 },
+      { hour: 11, minute: 15 },
+      { hour: 12, minute: 15 },
+      { hour: 13, minute: 15 },
+      { hour: 14, minute: 15 },
+      { hour: 15, minute: 15 },
+      { hour: 16, minute: 15 },
+      { hour: 17, minute: 15 },
+      { hour: 20, minute: 15 },
+      { hour: 21, minute: 15 },
+      { hour: 22, minute: 15 }
+    ];
+
+    // ── Weekend Timetables (Sat & Sun) ───────────────────────────
+    const busATimesWeekend = [
+      { hour: 6, minute: 30 },
+      { hour: 6, minute: 45 },
+      { hour: 7, minute: 0 },
+      { hour: 7, minute: 15 },
+      { hour: 7, minute: 30 },
+      { hour: 7, minute: 45 },
+      { hour: 8, minute: 0 },
+      { hour: 8, minute: 15 },
+      { hour: 8, minute: 30 },
+      { hour: 8, minute: 45 },
+      { hour: 9, minute: 0 },
+      { hour: 9, minute: 10 },
+      { hour: 9, minute: 20 },
+      { hour: 9, minute: 30 },
+      { hour: 9, minute: 40 },
+      { hour: 9, minute: 55 },
+      { hour: 10, minute: 10 },
+      { hour: 10, minute: 25 },
+      { hour: 10, minute: 40 },
+      { hour: 10, minute: 55 },
+      { hour: 11, minute: 10 },
+      { hour: 11, minute: 25 },
+      { hour: 11, minute: 40 },
+      { hour: 11, minute: 55 },
+      { hour: 12, minute: 5 },
+      { hour: 12, minute: 10 },
+      { hour: 12, minute: 15 },
+      { hour: 12, minute: 25 },
+      { hour: 12, minute: 30 },
+      { hour: 12, minute: 35 },
+      { hour: 12, minute: 45 },
+      { hour: 12, minute: 50 },
+      { hour: 12, minute: 55 },
+      { hour: 13, minute: 5 },
+      { hour: 13, minute: 10 },
+      { hour: 13, minute: 15 },
+      { hour: 13, minute: 25 },
+      { hour: 13, minute: 30 },
+      { hour: 13, minute: 35 },
+      { hour: 13, minute: 45 },
+      { hour: 13, minute: 50 },
+      { hour: 13, minute: 55 },
+      { hour: 14, minute: 5 },
+      { hour: 14, minute: 10 },
+      { hour: 14, minute: 15 },
+      { hour: 14, minute: 25 },
+      { hour: 14, minute: 40 },
+      { hour: 14, minute: 55 },
+      { hour: 15, minute: 10 },
+      { hour: 15, minute: 25 },
+      { hour: 15, minute: 40 },
+      { hour: 15, minute: 55 },
+      { hour: 16, minute: 15 },
+      { hour: 16, minute: 30 },
+      { hour: 16, minute: 45 },
+      { hour: 17, minute: 0 },
+      { hour: 17, minute: 10 },
+      { hour: 17, minute: 20 },
+      { hour: 17, minute: 30 },
+      { hour: 17, minute: 40 },
+      { hour: 17, minute: 50 },
+      { hour: 18, minute: 0 },
+      { hour: 18, minute: 10 },
+      { hour: 18, minute: 20 },
+      { hour: 18, minute: 30 },
+      { hour: 18, minute: 40 },
+      { hour: 18, minute: 50 },
+      { hour: 19, minute: 5 },
+      { hour: 19, minute: 25 },
+      { hour: 19, minute: 35 },
+      { hour: 19, minute: 45 },
+      { hour: 20, minute: 0 },
+      { hour: 20, minute: 15 },
+      { hour: 20, minute: 30 },
+      { hour: 20, minute: 45 },
+      { hour: 21, minute: 0 },
+      { hour: 21, minute: 15 },
+      { hour: 21, minute: 30 },
+      { hour: 21, minute: 45 },
+      { hour: 22, minute: 0 },
+      { hour: 22, minute: 15 },
+      { hour: 22, minute: 30 },
+      { hour: 22, minute: 45 },
+      { hour: 23, minute: 0 }
+    ];
+
+    const busBTimesWeekend = [
+      { hour: 6, minute: 30 },
+      { hour: 6, minute: 45 },
+      { hour: 6, minute: 55 },
+      { hour: 7, minute: 5 },
+      { hour: 7, minute: 15 },
+      { hour: 7, minute: 25 },
+      { hour: 7, minute: 35 },
+      { hour: 7, minute: 45 },
+      { hour: 7, minute: 55 },
+      { hour: 8, minute: 5 },
+      { hour: 8, minute: 15 },
+      { hour: 8, minute: 25 },
+      { hour: 8, minute: 35 },
+      { hour: 8, minute: 45 },
+      { hour: 8, minute: 55 },
+      { hour: 9, minute: 5 },
+      { hour: 9, minute: 15 },
+      { hour: 9, minute: 25 },
+      { hour: 9, minute: 35 },
+      { hour: 9, minute: 45 },
+      { hour: 10, minute: 0 },
+      { hour: 10, minute: 15 },
+      { hour: 10, minute: 30 },
+      { hour: 10, minute: 45 },
+      { hour: 11, minute: 0 },
+      { hour: 11, minute: 15 },
+      { hour: 11, minute: 30 },
+      { hour: 11, minute: 45 },
+      { hour: 12, minute: 0 },
+      { hour: 12, minute: 10 },
+      { hour: 12, minute: 15 },
+      { hour: 12, minute: 25 },
+      { hour: 12, minute: 35 },
+      { hour: 12, minute: 45 },
+      { hour: 12, minute: 55 },
+      { hour: 13, minute: 0 },
+      { hour: 13, minute: 10 },
+      { hour: 13, minute: 20 },
+      { hour: 13, minute: 25 },
+      { hour: 13, minute: 35 },
+      { hour: 13, minute: 45 },
+      { hour: 13, minute: 50 },
+      { hour: 14, minute: 0 },
+      { hour: 14, minute: 10 },
+      { hour: 14, minute: 15 },
+      { hour: 14, minute: 25 },
+      { hour: 14, minute: 40 },
+      { hour: 14, minute: 55 },
+      { hour: 15, minute: 10 },
+      { hour: 15, minute: 25 },
+      { hour: 15, minute: 40 },
+      { hour: 15, minute: 50 },
+      { hour: 16, minute: 0 },
+      { hour: 16, minute: 10 },
+      { hour: 16, minute: 20 },
+      { hour: 16, minute: 30 },
+      { hour: 16, minute: 40 },
+      { hour: 16, minute: 50 },
+      { hour: 17, minute: 0 },
+      { hour: 17, minute: 10 },
+      { hour: 17, minute: 20 },
+      { hour: 17, minute: 25 },
+      { hour: 17, minute: 35 },
+      { hour: 17, minute: 45 },
+      { hour: 17, minute: 50 },
+      { hour: 18, minute: 0 },
+      { hour: 18, minute: 10 },
+      { hour: 18, minute: 15 },
+      { hour: 18, minute: 25 },
+      { hour: 18, minute: 35 },
+      { hour: 18, minute: 40 },
+      { hour: 18, minute: 50 },
+      { hour: 19, minute: 5 },
+      { hour: 19, minute: 15 },
+      { hour: 19, minute: 30 },
+      { hour: 19, minute: 40 },
+      { hour: 19, minute: 55 },
+      { hour: 20, minute: 5 },
+      { hour: 20, minute: 20 },
+      { hour: 20, minute: 30 },
+      { hour: 20, minute: 45 },
+      { hour: 20, minute: 55 },
+      { hour: 21, minute: 10 },
+      { hour: 21, minute: 20 },
+      { hour: 21, minute: 35 },
+      { hour: 21, minute: 45 },
+      { hour: 21, minute: 55 },
+      { hour: 22, minute: 5 },
+      { hour: 22, minute: 15 },
+      { hour: 22, minute: 25 },
+      { hour: 22, minute: 35 },
+      { hour: 22, minute: 45 },
+      { hour: 23, minute: 5 },
+      { hour: 23, minute: 15 }
+    ];
+
+    const busCTimesWeekend = [
+      { hour: 06, minute: 30 },
+      { hour: 07, minute: 30 },
+      { hour: 08, minute: 30 },
+      { hour: 09, minute: 30 },
+      { hour: 10, minute: 30 },
+      { hour: 11, minute: 30 },
+      { hour: 14, minute: 30 },
+      { hour: 15, minute: 30 },
+      { hour: 16, minute: 30 },
+      { hour: 19, minute: 30 },
+      { hour: 20, minute: 30 },
+      { hour: 21, minute: 30 },
+      { hour: 22, minute: 30 }
+    ];
+
+
+    // ── KMB 74K real-time ────────────────────────────────────────────────────
+    const KMB_ROUTE = "74K";
+    const KMB_SERVICE_TYPES = ["1", "2"];
+
+    // Tai Po Market Station Bus Terminus (departures)
+    const TAIPO_STOP = "94A3E9298FD887C6";
+    let taipoCache = [];
+
+    // EdUHK TP893 (arrivals)
+    const EDUHK_STOP = "DA9843B8F12ED700";  // TP893 - confirmed
+    let eduhkCache = [];
+
+    async function fetchKMBETAs(stopId, cacheVar) {
+      let etas = [];
+      const now = new Date();
+
+      for (const st of KMB_SERVICE_TYPES) {
+        try {
+          const url = `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${KMB_ROUTE}/${st}`;
+          const res = await fetch(url);
+          if (!res.ok) continue;
+          const json = await res.json();
+          if (json.data && json.data.length > 0) {
+            const items = json.data
+              .filter(e => e.eta && new Date(e.eta) > now)
+              // For terminus (Tai Po): use seq === 1 for scheduled departures
+              // For mid-stop (EdUHK): comment out to show all arrivals
+              .filter(e => stopId === TAIPO_STOP ? e.seq === 1 : true)
+              .sort((a, b) => new Date(a.eta) - new Date(b.eta));
+            etas = etas.concat(items);
+          }
+        } catch (err) {
+          console.warn(`ETA fetch error for ${stopId}`, err);
+        }
+      }
+
+      etas = etas
+        .filter((e, i, self) => self.findIndex(t => t.eta === e.eta) === i)
+        .sort((a, b) => new Date(a.eta) - new Date(b.eta))
+        .slice(0, 3);
+
+      if (stopId === TAIPO_STOP) taipoCache = etas;
+      else eduhkCache = etas;
+    }
+
+    function formatKMBDiff(etaStr) {
+      if (!etaStr) return "--.--";
+      const etaDate = new Date(etaStr);
+      const diffMs = etaDate - new Date();
+      if (diffMs < 0) return "Departed";
+      const minutes = Math.floor(diffMs / 60000);
+      const seconds = Math.floor((diffMs % 60000) / 1000);
+      return `${minutes}.${seconds.toString().padStart(2, '0')}`;
+    }
+
+    // ── MTR Feeder Bus (K17 / K12) real-time ─────────────────────────────────
+    // API: POST https://rt.data.gov.hk/v1/transport/mtr/bus/getSchedule
+    // K17-U010 = Tai Po Market Station (outbound to Fu Shin)
+    // K12-D020 = Tai Po Mega Mall (inbound towards Tai Po Market Station)
+    // Note: API returns relative seconds. We store fetch timestamp so the
+    // countdown can tick every second between 30-second refreshes.
+    let k17Cache = [];
+    let k12Cache = [];
+
+    async function fetchMTRBus(routeName, stopId, cacheSetter) {
+      try {
+        const res = await fetch('https://rt.data.gov.hk/v1/transport/mtr/bus/getSchedule', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ language: 'en', routeName })
+        });
+        if (!res.ok) return;
+        const json = await res.json();
+        if (!json.busStop) return;
+
+        const stop = json.busStop.find(s => s.busStopId === stopId);
+        if (!stop || !stop.bus) {
+          cacheSetter([]);
+          return;
+        }
+
+        const fetchedAt = Date.now(); // absolute time of this snapshot
+        const items = stop.bus
+          .map(b => {
+            const depSec = parseInt(b.departureTimeInSecond, 10);
+            const arrSec = parseInt(b.arrivalTimeInSecond, 10);
+
+            // Prefer ARRIVAL time for boarding (when bus reaches the stop).
+            // Fall back to departure only if arrival is missing / placeholder.
+            // This removes the ~1 min over-estimate users were seeing.
+            let waitSec;
+            if (!isNaN(arrSec) && arrSec > -60 && arrSec < 100000) {
+              waitSec = arrSec;
+            } else if (!isNaN(depSec) && depSec > -60 && depSec < 100000) {
+              waitSec = depSec;
+            } else {
+              return null;
+            }
+
+            return {
+              waitSecAtFetch: waitSec,   // relative seconds at fetch time
+              fetchedAt,                 // Date.now() when we got the data
+              busId: b.busId,
+              isScheduled: b.isScheduled === '1'
+            };
+          })
+          .filter(Boolean)
+          .filter(b => b.waitSecAtFetch > -30)
+          .sort((a, b) => a.waitSecAtFetch - b.waitSecAtFetch)
+          .slice(0, 3);
+
+        cacheSetter(items);
+      } catch (err) {
+        console.warn(`MTR Bus fetch error for ${routeName}`, err);
+      }
+    }
+
+    function formatMTRWait(item) {
+      if (!item) return '--.--';
+      // Remaining = original relative seconds minus elapsed time since fetch
+      const elapsedSec = (Date.now() - item.fetchedAt) / 1000;
+      const remaining = item.waitSecAtFetch - elapsedSec;
+      if (remaining <= 0) return 'Departing';
+      const minutes = Math.floor(remaining / 60);
+      const seconds = Math.floor(remaining % 60);
+      return `${minutes}.${seconds.toString().padStart(2, '0')}`;
+    }
+
+    // Compute the absolute clock time (HH:MM) of the expected arrival
+    function formatMTRClock(item) {
+      if (!item) return '';
+      const elapsedSec = (Date.now() - item.fetchedAt) / 1000;
+      const remaining = item.waitSecAtFetch - elapsedSec;
+      const target = new Date(Date.now() + Math.max(0, remaining) * 1000);
+      const h = target.getHours().toString().padStart(2, '0');
+      const m = target.getMinutes().toString().padStart(2, '0');
+      return `${h}:${m}`;
+    }
+
+    // ── Shuttle helpers (unchanged) ─────────────────────────────────────────
+    function getTimetable(bus) {
+      const now = new Date();
+      const isWeekend = now.getDay() === 0 || now.getDay() === 6;
+      if (bus === 'A') return isWeekend ? busATimesWeekend : busATimesWeekday;
+      if (bus === 'B') return isWeekend ? busBTimesWeekend : busBTimesWeekday;
+      if (bus === 'C') return isWeekend ? busCTimesWeekend : busCTimesWeekday;
+      return [];
+    }
+
+    function getBusDateTimesForDay(busTimes, dayOffset = 0) {
+      const now = new Date();
+      const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() + dayOffset);
+      return busTimes.map(t => new Date(date.getFullYear(), date.getMonth(), date.getDate(), t.hour, t.minute, 0, 0));
+    }
+
+    function getNextNBuses(bus, n) {
+      const now = new Date();
+      const times = getTimetable(bus);
+      let buses = [];
+      let todayBuses = getBusDateTimesForDay(times, 0).filter(t => t > now);
+      if (todayBuses.length >= n) {
+        buses = todayBuses.slice(0, n);
+      } else {
+        buses = todayBuses;
+        const tomorrowBuses = getBusDateTimesForDay(times, 1);
+        const needed = n - buses.length;
+        buses = buses.concat(tomorrowBuses.slice(0, needed));
+      }
+      return buses;
+    }
+
+    function formatWait(diffMs) {
+      const diffSec = Math.floor(diffMs / 1000);
+      const minutes = Math.floor(diffSec / 60);
+      const seconds = diffSec % 60;
+      return `${minutes}.${seconds.toString().padStart(2,'0')}`;
+    }
+
+    function formatCurrentTime(dateObj) {
+      return dateObj.getHours().toString().padStart(2, '0') + ':' +
+             dateObj.getMinutes().toString().padStart(2, '0') + ':' +
+             dateObj.getSeconds().toString().padStart(2, '0');
+    }
+
+    function formatCurrentDate(dateObj) {
+      const year = dateObj.getFullYear();
+      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+      const day = dateObj.getDate().toString().padStart(2, '0');
+      const weekday = dateObj.toLocaleString('en-US', { weekday: 'short' });
+      return `${year}-${month}-${day} ${weekday}`;
+    }
+
+    function getNextCombinedArrivals(n) {
+      const now = new Date();
+      const arrivalsA = getNextNBuses('A', n*2).map(dt => ({ bus: 'Bus A', time: dt }));
+      const arrivalsB = getNextNBuses('B', n*2).map(dt => ({ bus: 'Bus B', time: dt }));
+      const arrivalsC = getNextNBuses('C', n*2).map(dt => ({ bus: 'Bus C', time: dt }));
+      const allArrivals = arrivalsA.concat(arrivalsB, arrivalsC)
+        .filter(obj => obj.time > now)
+        .sort((a, b) => a.time - b.time);
+      return allArrivals.slice(0, n);
+    }
+
+    // ── Update Functions ─────────────────────────────────────────────────────
+    function updateHeader() {
+      const now = new Date();
+      document.getElementById('current-date').textContent = formatCurrentDate(now);
+      document.getElementById('current-time').textContent = formatCurrentTime(now);
+    }
+
+    async function updateArrivalsTable() {
+      const table = document.getElementById('arrivals-table');
+      const now = new Date();
+      const nextShuttle = getNextCombinedArrivals(4);
+
+      let html = '';
+
+      // Shuttle buses
+      nextShuttle.forEach(arrival => {
+        const diffMs = arrival.time - now;
+        const hours = arrival.time.getHours().toString().padStart(2, '0');
+        const minutes = arrival.time.getMinutes().toString().padStart(2, '0');
+        const scheduled = `${hours}:${minutes}`;
+        html += `
+          <tr>
+            <td class="bus-name">
+              ${arrival.bus}
+              <span style="color:#666; font-size:0.82em; margin-left:10px; letter-spacing:0.02em;">${scheduled}</span>
+            </td>
+            <td class="wait-mins">${formatWait(diffMs)}</td>
+          </tr>
+        `;
+      });
+
+      // ── Public Bus 74K ───────────────────────────────────────────────────
+      html += '<tr class="section-header"><td colspan="2">Public Bus 74K</td></tr>';
+
+      // Tai Po Market Station (departures)
+      if (taipoCache.length > 0) {
+        taipoCache.forEach(eta => {
+          const etaDate = new Date(eta.eta);
+          const hours = etaDate.getHours().toString().padStart(2, '0');
+          const minutes = etaDate.getMinutes().toString().padStart(2, '0');
+          const scheduled = `${hours}:${minutes}`;
+          const remark = eta.rmk_en ? `(${eta.rmk_en})` : '';
+          html += `
+            <tr>
+              <td class="bus-name">
+                74K Tai Po Market
+                <span style="color:#666; font-size:0.82em; margin-left:10px; letter-spacing:0.02em;">${scheduled}</span>
+              </td>
+              <td class="wait-mins">${formatKMBDiff(eta.eta)}</td>
+            </tr>
+          `;
+        });
+      } else {
+        html += `
+          <tr>
+            <td class="bus-name">
+              74K Tai Po Market
+              <span class="remark">departure • loading...</span>
+            </td>
+            <td class="wait-mins">--.--</td>
+          </tr>
+        `;
+      }
+
+      // EdUHK TP893 (arrivals)
+      if (eduhkCache.length > 0) {
+        eduhkCache.forEach(eta => {
+          const etaDate = new Date(eta.eta);
+          const hours = etaDate.getHours().toString().padStart(2, '0');
+          const minutes = etaDate.getMinutes().toString().padStart(2, '0');
+          const scheduled = `${hours}:${minutes}`;
+          const remark = eta.rmk_en ? `(${eta.rmk_en})` : '';
+          html += `
+            <tr>
+              <td class="bus-name">
+                74K EdUHK
+                <span style="color:#666; font-size:0.82em; margin-left:10px; letter-spacing:0.02em;">${scheduled}</span>
+              </td>
+              <td class="wait-mins">${formatKMBDiff(eta.eta)}</td>
+            </tr>
+          `;
+        });
+      } else {
+        html += `
+          <tr>
+            <td class="bus-name">
+              74K EdUHK
+              <span class="remark">arrival at campus • loading...</span>
+            </td>
+            <td class="wait-mins">--.--</td>
+          </tr>
+        `;
+      }
+
+      // ── MTR Feeder Bus K17 (from Tai Po Market Station) ───────────────────
+      html += '<tr class="section-header"><td colspan="2">MTR Bus K17 · Tai Po Market Station</td></tr>';
+      if (k17Cache.length > 0) {
+        k17Cache.forEach(item => {
+          html += `
+            <tr>
+              <td class="bus-name">
+                K17 to Fu Shin
+                <span style="color:#666; font-size:0.82em; margin-left:10px; letter-spacing:0.02em;">${formatMTRClock(item)}</span>
+              </td>
+              <td class="wait-mins">${formatMTRWait(item)}</td>
+            </tr>
+          `;
+        });
+      } else {
+        html += `
+          <tr>
+            <td class="bus-name">
+              K17 to Fu Shin
+              <span class="remark">departure • loading...</span>
+            </td>
+            <td class="wait-mins">--.--</td>
+          </tr>
+        `;
+      }
+
+      // ── MTR Feeder Bus K12 (from Tai Po Mega Mall → Tai Po Market) ────────
+      html += '<tr class="section-header"><td colspan="2">MTR Bus K12 · Tai Po Mega Mall → Market Stn</td></tr>';
+      if (k12Cache.length > 0) {
+        k12Cache.forEach(item => {
+          html += `
+            <tr>
+              <td class="bus-name">
+                K12 to Tai Po Market
+                <span style="color:#666; font-size:0.82em; margin-left:10px; letter-spacing:0.02em;">${formatMTRClock(item)}</span>
+              </td>
+              <td class="wait-mins">${formatMTRWait(item)}</td>
+            </tr>
+          `;
+        });
+      } else {
+        html += `
+          <tr>
+            <td class="bus-name">
+              K12 to Tai Po Market
+              <span class="remark">departure • loading...</span>
+            </td>
+            <td class="wait-mins">--.--</td>
+          </tr>
+        `;
+      }
+
+      table.innerHTML = html;
+    }
+
+    async function updateAll() {
+      updateHeader();
+      await updateArrivalsTable();
+    }
+
+    // ── Start ────────────────────────────────────────────────────────────────
+    fetchKMBETAs(TAIPO_STOP, taipoCache);
+    fetchKMBETAs(EDUHK_STOP, eduhkCache);
+    fetchMTRBus('K17', 'K17-U010', items => { k17Cache = items; });
+    fetchMTRBus('K12', 'K12-D020', items => { k12Cache = items; });
+
+    setInterval(() => fetchKMBETAs(TAIPO_STOP, taipoCache), 30000);
+    setInterval(() => fetchKMBETAs(EDUHK_STOP, eduhkCache), 30000);
+    setInterval(() => fetchMTRBus('K17', 'K17-U010', items => { k17Cache = items; }), 30000);
+    setInterval(() => fetchMTRBus('K12', 'K12-D020', items => { k12Cache = items; }), 30000);
+
+    setInterval(updateAll, 1000);
+    updateAll();
+  </script>
+</body>
+</html>
